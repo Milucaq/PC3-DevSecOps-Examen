@@ -3,222 +3,1252 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PescaConecta Chorrillos: conecta pescadores artesanales y compradores del terminal pesquero.">
+  <meta name="description" content="PescaConecta Chorrillos: mercado pesquero digital.">
   <title>PescaConecta | Del mar a tu mesa</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
-    :root { --navy:#0b2740; --navy-deep:#071b2c; --teal:#008c91; --teal-dark:#00777c; --mint:#dbf4ef; --ink:#172c3d; --muted:#607889; --line:#e6edf0; --cloud:#f6fafb; --gold:#f5b85e; }
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body { margin:0; color:var(--ink); font-family:'DM Sans',sans-serif; background:#fff; }
-    h1,h2,h3,h4,.brand { font-family:'Manrope',sans-serif; }
-    a { text-decoration:none; }
-    .announcement { background:#083851; color:#d7f5f3; font-size:12px; text-align:center; padding:8px 12px; letter-spacing:.015em; }
-    .announcement strong { color:#fff; }
-    .main-nav { background:white; box-shadow:0 8px 26px rgba(14,47,64,.05); position:relative; z-index:10; }
-    .navbar { min-height:81px; }
-    .brand { display:flex; align-items:center; gap:10px; color:var(--navy); font-size:21px; font-weight:800; letter-spacing:-.9px; }
-    .brand-mark { width:41px; height:41px; display:grid; place-items:center; color:#fff; background:var(--teal); border-radius:12px; transform:rotate(-7deg); font-size:21px; }
-    .brand-mark i { transform:rotate(7deg); }
-    .brand span span { color:var(--teal); }
-    .brand small { display:block; color:#78909c; font-family:'DM Sans'; font-size:9px; letter-spacing:2px; text-transform:uppercase; margin-top:-2px; font-weight:700; }
-    .nav-link { color:#345063 !important; font-weight:700; font-size:13px; margin:0 8px; }
-    .nav-link:hover { color:var(--teal) !important; }
-    .button-main { background:var(--teal); color:white; border:1px solid var(--teal); padding:11px 19px; border-radius:11px; font-weight:700; font-size:13px; display:inline-flex; gap:9px; align-items:center; justify-content:center; transition:.2s; cursor:pointer; }
-    .button-main:hover { background:var(--teal-dark); color:white; transform:translateY(-1px); }
-    .button-outline { background:white; color:var(--navy); border:1px solid #d9e7e9; padding:11px 18px; border-radius:11px; font-weight:700; font-size:13px; display:inline-flex; align-items:center; justify-content:center; gap:9px; cursor:pointer; }
-    .button-outline:hover { color:var(--teal); border-color:var(--teal); }
-    .hero { background:var(--navy-deep); position:relative; overflow:hidden; isolation:isolate; }
-    .hero::before { content:""; position:absolute; inset:0; z-index:-2; background-image:linear-gradient(90deg,rgba(5,30,47,.97) 0%,rgba(5,33,50,.93) 42%,rgba(5,34,52,.37) 100%),url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1700&q=85'); background-size:cover; background-position:center 47%; }
-    .hero::after { content:""; position:absolute; width:570px; height:570px; background:radial-gradient(circle,rgba(9,178,177,.22),transparent 67%); left:28%; bottom:-390px; z-index:-1; }
-    .hero .container { padding-top:99px; padding-bottom:125px; }
-    .eyebrow { display:inline-flex; align-items:center; gap:9px; font-size:11px; color:#bff4e7; letter-spacing:1.6px; font-weight:800; text-transform:uppercase; }
-    .eyebrow-dot { width:8px; height:8px; border-radius:50%; background:#62e1c8; box-shadow:0 0 0 5px rgba(98,225,200,.13); }
-    .hero h1 { color:white; font-size:clamp(38px,5vw,67px); line-height:1.11; font-weight:800; max-width:740px; letter-spacing:-2.9px; margin:23px 0; }
-    .hero h1 em { font-style:normal; color:#71ded3; }
-    .hero p { color:#cfdee5; font-size:16px; line-height:1.8; max-width:535px; }
-    .hero .button-main { padding:15px 24px; background:#25b5ad; border-color:#25b5ad; color:#062b35; }
-    .hero .button-main:hover { background:#68e5d7; }
-    .hero .button-outline { padding:15px 23px; background:transparent; color:#fff; border-color:rgba(255,255,255,.36); }
-    .hero .button-outline:hover { background:rgba(255,255,255,.12); }
-    .hero-info { position:absolute; right:5%; bottom:66px; background:rgba(255,255,255,.95); border:1px solid rgba(255,255,255,.6); border-radius:17px; padding:17px 19px; box-shadow:0 12px 30px #071b2c4f; max-width:247px; }
-    .hero-info .marker { color:#008c91; background:#def8f1; width:36px; height:36px; border-radius:9px; display:grid; place-items:center; font-size:19px; }
-    .hero-info strong { display:block; font-size:13px; }
-    .hero-info small { font-size:11px; color:#65808d; }
-    .feature-band { margin-top:-46px; position:relative; z-index:3; }
-    .feature-wrap { background:#fff; border-radius:18px; box-shadow:0 19px 45px #092d3c17; border:1px solid #e9f0f1; }
-    .feature { display:flex; gap:14px; align-items:center; padding:23px 26px; }
-    .feature i { color:var(--teal); font-size:25px; }
-    .feature strong { display:block; font-weight:800; font-size:13px; }
-    .feature span { color:#758894; font-size:12px; }
-    .feature + .feature { border-left:1px solid #eaf1f2; }
-    section.content-section { padding:86px 0 30px; }
-    .section-kicker { font-size:11px; font-weight:800; letter-spacing:2px; color:var(--teal); text-transform:uppercase; }
-    .section-title { font-size:clamp(25px,3.3vw,39px); font-weight:800; color:var(--navy); line-height:1.25; letter-spacing:-1.3px; margin:10px 0 13px; }
-    .section-copy { color:var(--muted); line-height:1.7; max-width:615px; font-size:14px; }
-    .demo-tag { font-size:11px; padding:7px 12px; border-radius:30px; color:#71541a; background:#fff4da; border:1px solid #f6e4b6; font-weight:700; display:inline-flex; align-items:center; gap:6px; }
-    .arrival-card { background:#fff; border:1px solid var(--line); border-radius:16px; padding:23px; height:100%; box-shadow:0 8px 28px rgba(8,52,66,.035); }
-    .arrival-top { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
-    .arrival-icon { height:44px; width:44px; border-radius:12px; background:#e7f7f4; color:var(--teal); display:grid; place-items:center; font-size:23px; }
-    .arrival-card h3 { font-size:17px; font-weight:800; margin:17px 0 5px; color:var(--navy); }
-    .arrival-card p { font-size:13px; color:var(--muted); margin:0; }
-    .status { border-radius:30px; padding:6px 10px; font-size:11px; font-weight:800; white-space:nowrap; }
-    .status.returning { background:#e6f4ff; color:#186ca4; }
-    .status.fishing { background:#f0edff; color:#6950a0; }
-    .status.arrived { background:#dbf8e7; color:#188353; }
-    .arrival-foot { margin-top:21px; border-top:1px solid var(--line); padding-top:16px; display:flex; justify-content:space-between; gap:8px; font-size:12px; color:#617889; }
-    .arrival-foot strong { display:block; color:var(--navy); font-size:13px; margin-top:4px; }
-    .market { background:var(--cloud); padding:85px 0; margin-top:68px; }
-    .product-card { background:#fff; border:1px solid #e7eff0; border-radius:17px; overflow:hidden; height:100%; box-shadow:0 10px 22px #0b3a4710; }
-    .product-photo { height:190px; background:#d8eaeb; position:relative; overflow:hidden; }
-    .product-photo img { height:100%; width:100%; object-fit:cover; transition:transform .35s; }
-    .product-card:hover .product-photo img { transform:scale(1.05); }
-    .pill { position:absolute; top:14px; left:14px; border-radius:50px; padding:7px 10px; background:#fff; font-size:10px; font-weight:800; color:#0c736e; box-shadow:0 3px 9px #0002; }
-    .product-body { padding:21px; }
-    .product-body h3 { font-size:17px; font-weight:800; color:var(--navy); margin-bottom:6px; }
-    .product-body p { color:var(--muted); font-size:12px; margin-bottom:15px; }
-    .product-bottom { padding-top:14px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
-    .price { color:var(--teal-dark); font-size:21px; font-weight:800; }
-    .price small { font-size:11px; font-weight:600; color:#7a8b95; }
-    .action-link { color:var(--teal-dark); background:#e8f7f4; padding:9px 12px; border-radius:9px; border:0; font-size:12px; font-weight:800; }
-    .action-link:hover { color:#fff; background:var(--teal-dark); }
-    .roles { padding:90px 0; }
-    .role-card { display:flex; align-items:flex-start; gap:14px; border-radius:15px; border:1px solid var(--line); background:#fff; padding:20px; width:100%; height:100%; text-align:left; transition:.2s; cursor:pointer; }
-    .role-card:hover, .role-card:focus-visible { border-color:var(--teal); box-shadow:0 13px 31px #0b565018; transform:translateY(-3px); outline:none; }
-    .role-icon { min-width:45px; height:45px; background:#ebf8f6; color:var(--teal); font-size:22px; border-radius:12px; display:grid; place-items:center; }
-    .role-card h3 { color:var(--navy); font-size:15px; font-weight:800; margin:1px 0 5px; }
-    .role-card p { font-size:12px; line-height:1.5; color:var(--muted); margin:0; }
-    .steps { background:#0c344e; padding:74px 0; color:white; }
-    .steps .section-title { color:white; }
-    .step-number { display:inline-grid; place-items:center; background:#1d5569; color:#76e6d9; border-radius:13px; font-family:Manrope; font-weight:800; font-size:20px; width:51px; height:51px; margin-bottom:18px; }
-    .steps h3 { font-size:16px; font-weight:800; }
-    .steps p { color:#b6cbd5; font-size:13px; line-height:1.7; max-width:300px; }
-    footer { background:#071d30; color:#b3c7d0; padding:36px 0; font-size:12px; }
-    footer .brand { color:white; }
-    footer .brand small { color:#7ca4b6; }
-    .modal-content { border:0; border-radius:21px; overflow:hidden; }
-    .modal-header { border-bottom:1px solid var(--line); padding:24px 27px; }
-    .modal-title { font-weight:800; color:var(--navy); }
-    .modal-body { padding:26px 27px; color:var(--muted); }
-    .modal-footer { padding:18px 27px; border-top:1px solid var(--line); }
-    .alert-note { background:#f0f9f8; color:#235d60; padding:13px 15px; border-radius:10px; font-size:12px; }
-    @media(max-width:991px){.hero .container{padding:78px 0 100px;}.hero-info{display:none;}.feature+.feature{border-left:0;border-top:1px solid var(--line)}.navbar-collapse{padding:16px 0}.hero h1{letter-spacing:-1.7px}}
-    @media(max-width:575px){.hero .container{padding:65px 0 91px}.hero h1{font-size:39px}.hero p{font-size:14px}.feature-band{margin-top:-25px}.feature{padding:17px 20px}.section-title{font-size:28px}.market,.roles{padding:60px 0}section.content-section{padding-top:65px}.product-photo{height:205px}}
+    :root {
+      --navy: #0b2740;
+      --navy-deep: #071b2c;
+      --teal: #008c91;
+      --teal-dark: #00777c;
+      --ink: #172c3d;
+      --muted: #607889;
+      --line: #e6edf0;
+      --cloud: #f6fafb;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: white;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    h1, h2, h3, h4, .brand {
+      font-family: 'Manrope', sans-serif;
+    }
+
+    a { text-decoration: none; }
+
+    .announcement {
+      background: #083851;
+      color: #d7f5f3;
+      text-align: center;
+      padding: 9px 12px;
+      font-size: 12px;
+    }
+
+    .announcement strong { color: white; }
+
+    .main-nav {
+      background: white;
+      box-shadow: 0 8px 26px rgba(14, 47, 64, .05);
+      position: relative;
+      z-index: 10;
+    }
+
+    .navbar { min-height: 81px; }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--navy);
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -.9px;
+    }
+
+    .brand-mark {
+      width: 41px;
+      height: 41px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--teal);
+      border-radius: 12px;
+      font-size: 21px;
+    }
+
+    .brand span span { color: var(--teal); }
+
+    .brand small {
+      display: block;
+      color: #78909c;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9px;
+      letter-spacing: 2px;
+      margin-top: -2px;
+    }
+
+    .nav-link {
+      color: #345063 !important;
+      font-weight: 700;
+      font-size: 13px;
+      margin: 0 8px;
+    }
+
+    .nav-link:hover { color: var(--teal) !important; }
+
+    .button-main {
+      background: var(--teal);
+      color: white;
+      border: 1px solid var(--teal);
+      padding: 12px 20px;
+      border-radius: 11px;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      gap: 9px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .button-main:hover {
+      background: var(--teal-dark);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .button-outline {
+      background: white;
+      color: var(--navy);
+      border: 1px solid #d9e7e9;
+      padding: 12px 20px;
+      border-radius: 11px;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      cursor: pointer;
+    }
+
+    .button-outline:hover {
+      color: var(--teal);
+      border-color: var(--teal);
+    }
+
+    /* HERO */
+
+    .hero {
+      background: var(--navy-deep);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(90deg,
+          rgba(5,30,47,.97) 0%,
+          rgba(5,33,50,.91) 45%,
+          rgba(5,34,52,.36) 100%),
+        url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1700&q=85');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero .container {
+      padding-top: 95px;
+      padding-bottom: 120px;
+    }
+
+    .eyebrow {
+      color: #bff4e7;
+      font-size: 11px;
+      letter-spacing: 1.6px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      color: white;
+      font-size: clamp(38px, 5vw, 67px);
+      line-height: 1.12;
+      font-weight: 800;
+      letter-spacing: -2.5px;
+      margin: 22px 0;
+    }
+
+    .hero h1 em {
+      color: #71ded3;
+      font-style: normal;
+    }
+
+    .hero p {
+      color: #cfdee5;
+      font-size: 16px;
+      line-height: 1.8;
+      max-width: 535px;
+    }
+
+    .hero .button-main {
+      padding: 15px 24px;
+      background: #25b5ad;
+      border-color: #25b5ad;
+      color: #062b35;
+    }
+
+    .hero .button-outline {
+      background: transparent;
+      border-color: #ffffff66;
+      color: white;
+    }
+
+    /* BENEFICIOS */
+
+    .feature-band {
+      margin-top: -43px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .feature-wrap {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 19px 45px #092d3c17;
+      border: 1px solid #e9f0f1;
+    }
+
+    .feature {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 23px 26px;
+    }
+
+    .feature i {
+      color: var(--teal);
+      font-size: 25px;
+    }
+
+    .feature strong {
+      display: block;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .feature span {
+      color: #758894;
+      font-size: 12px;
+    }
+
+    /* SECCIONES */
+
+    .content-section { padding: 85px 0 40px; }
+
+    .section-kicker {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--teal);
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      font-size: clamp(25px, 3.3vw, 39px);
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -1.3px;
+      margin: 10px 0 13px;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 615px;
+      font-size: 14px;
+    }
+
+    .demo-tag {
+      font-size: 11px;
+      padding: 8px 12px;
+      border-radius: 30px;
+      color: #71541a;
+      background: #fff4da;
+      border: 1px solid #f6e4b6;
+      font-weight: 700;
+    }
+
+    /* EMBARCACIONES DE REFERENCIA */
+
+    .arrival-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 23px;
+      height: 100%;
+    }
+
+    .arrival-icon {
+      height: 44px;
+      width: 44px;
+      border-radius: 12px;
+      background: #e7f7f4;
+      color: var(--teal);
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+    }
+
+    .arrival-card h3 {
+      font-size: 17px;
+      font-weight: 800;
+      margin: 17px 0 5px;
+    }
+
+    .arrival-card p {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .status {
+      border-radius: 30px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .status.returning {
+      background: #e6f4ff;
+      color: #186ca4;
+    }
+
+    .status.fishing {
+      background: #f0edff;
+      color: #6950a0;
+    }
+
+    .status.arrived {
+      background: #dbf8e7;
+      color: #188353;
+    }
+
+    .arrival-foot {
+      margin-top: 21px;
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .arrival-foot strong {
+      display: block;
+      color: var(--navy);
+      margin-top: 4px;
+    }
+
+    /* CATÁLOGO REAL */
+
+    .market {
+      background: var(--cloud);
+      padding: 85px 0;
+      margin-top: 60px;
+    }
+
+    .catalog-search {
+      background: white;
+      border: 1px solid #e7eff0;
+      border-radius: 15px;
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+
+    .catalog-search .form-control {
+      border-radius: 11px;
+      padding: 12px 15px;
+      font-size: 14px;
+    }
+
+    .product-card {
+      background: white;
+      border: 1px solid #e7eff0;
+      border-radius: 17px;
+      overflow: hidden;
+      height: 100%;
+      box-shadow: 0 10px 22px #0b3a4710;
+      transition: .25s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 35px #0b3a4722;
+    }
+
+    .product-photo {
+      height: 215px;
+      background: #d8eaeb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-photo img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transition: transform .35s;
+    }
+
+    .product-card:hover .product-photo img {
+      transform: scale(1.05);
+    }
+
+    .pill {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      border-radius: 50px;
+      padding: 7px 10px;
+      background: white;
+      font-size: 10px;
+      font-weight: 800;
+      color: #0c736e;
+      box-shadow: 0 3px 9px #0002;
+    }
+
+    .product-body { padding: 21px; }
+
+    .product-body h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .product-body p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 17px;
+    }
+
+    .product-bottom {
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .price {
+      color: var(--teal-dark);
+      font-size: 21px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .price small {
+      font-size: 11px;
+      font-weight: 600;
+      color: #7a8b95;
+    }
+
+    .action-link {
+      color: var(--teal-dark);
+      background: #e8f7f4;
+      padding: 10px 12px;
+      border-radius: 9px;
+      border: 0;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .action-link:hover {
+      color: white;
+      background: var(--teal-dark);
+    }
+
+    /* PERFILES */
+
+    .roles { padding: 90px 0; }
+
+    .role-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border-radius: 15px;
+      border: 1px solid var(--line);
+      background: white;
+      padding: 20px;
+      width: 100%;
+      height: 100%;
+      text-align: left;
+      transition: .2s;
+      cursor: pointer;
+    }
+
+    .role-card:hover {
+      border-color: var(--teal);
+      box-shadow: 0 13px 31px #0b565018;
+      transform: translateY(-3px);
+    }
+
+    .role-icon {
+      min-width: 45px;
+      height: 45px;
+      background: #ebf8f6;
+      color: var(--teal);
+      font-size: 22px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+    }
+
+    .role-card h3 {
+      color: var(--navy);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .role-card p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* PASOS Y PIE */
+
+    .steps {
+      background: #0c344e;
+      padding: 74px 0;
+      color: white;
+    }
+
+    .steps .section-title { color: white; }
+
+    .step-number {
+      display: inline-grid;
+      place-items: center;
+      background: #1d5569;
+      color: #76e6d9;
+      border-radius: 13px;
+      font-weight: 800;
+      font-size: 20px;
+      width: 51px;
+      height: 51px;
+      margin-bottom: 18px;
+    }
+
+    .steps h3 { font-size: 16px; font-weight: 800; }
+
+    .steps p {
+      color: #b6cbd5;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    footer {
+      background: #071d30;
+      color: #b3c7d0;
+      padding: 36px 0;
+      font-size: 12px;
+    }
+
+    footer .brand { color: white; }
+
+    .modal-content {
+      border: 0;
+      border-radius: 21px;
+      overflow: hidden;
+    }
+
+    .modal-header, .modal-footer {
+      padding: 20px 26px;
+    }
+
+    .modal-body { padding: 26px; }
+
+    @media (max-width: 991px) {
+      .feature + .feature {
+        border-top: 1px solid var(--line);
+      }
+      .hero .container {
+        padding-top: 70px;
+        padding-bottom: 90px;
+      }
+    }
+
+    @media (max-width: 575px) {
+      .hero h1 { font-size: 39px; }
+      .market, .roles { padding: 60px 0; }
+      .product-photo { height: 205px; }
+    }
   </style>
 </head>
+
 <body>
-  <div class="announcement"><i class="bi bi-geo-alt-fill me-1"></i> <strong>CHORRILLOS, LIMA</strong> &nbsp;·&nbsp; Conectando el desembarque artesanal con tus próximas compras</div>
-  <nav class="navbar navbar-expand-lg main-nav" aria-label="Navegación principal">
+
+  <!-- BARRA SUPERIOR -->
+  <div class="announcement">
+    <i class="bi bi-geo-alt-fill me-1"></i>
+    <strong>CHORRILLOS, LIMA</strong>
+    &nbsp;·&nbsp;
+    Conectando la pesca artesanal con tus próximas compras
+  </div>
+
+  <!-- NAVEGACIÓN -->
+  <nav class="navbar navbar-expand-lg main-nav">
     <div class="container">
-      <a class="brand" href="#inicio" aria-label="PescaConecta, ir al inicio">
+      <a class="brand" href="#inicio">
         <span class="brand-mark"><i class="bi bi-water"></i></span>
         <span>Pesca<span>Conecta</span><small>CHORRILLOS</small></span>
       </a>
-      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
+
+      <button class="navbar-toggler border-0"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#mainNav"
+              aria-controls="mainNav"
+              aria-expanded="false"
+              aria-label="Abrir menú">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav mx-auto align-items-lg-center">
           <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
           <li class="nav-item"><a class="nav-link" href="#llegadas">Próximas llegadas</a></li>
           <li class="nav-item"><a class="nav-link" href="#catalogo">Pescado disponible</a></li>
+          <li class="nav-item"><a class="nav-link" href="#perfiles">Perfiles</a></li>
           <li class="nav-item"><a class="nav-link" href="#como-funciona">Cómo funciona</a></li>
         </ul>
-        <button class="button-main mt-3 mt-lg-0" type="button" data-profile="Pescador"><i class="bi bi-person-circle"></i> Portal de pescadores</button>
+
+        <a href="/pescador" class="button-main mt-3 mt-lg-0">
+          <i class="bi bi-person-circle"></i>
+          Portal de pescadores
+        </a>
       </div>
     </div>
   </nav>
+
+  <!-- PORTADA -->
   <header class="hero" id="inicio">
-    <div class="container position-relative">
-      <div class="row"><div class="col-lg-8">
-        <div class="eyebrow"><span class="eyebrow-dot"></span> MERCADO PESQUERO DIGITAL · MVP ACADÉMICO</div>
-        <h1>Lo mejor del mar,<br><em>más cerca de ti.</em></h1>
-        <p>Entérate de las próximas llegadas al Terminal Pesquero de Chorrillos, descubre especies y precios, y organiza tus compras sin esperar a ciegas.</p>
-        <div class="d-flex gap-3 flex-wrap mt-4">
-          <a class="button-main" href="#catalogo">Explorar pescado disponible <i class="bi bi-arrow-up-right"></i></a>
-          <button class="button-outline" type="button" data-profile="Pescador"><i class="bi bi-person-plus"></i> Soy pescador</button>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="eyebrow">
+            MERCADO PESQUERO DIGITAL · MVP ACADÉMICO
+          </div>
+
+          <h1>
+            Lo mejor del mar,<br>
+            <em>más cerca de ti.</em>
+          </h1>
+
+          <p>
+            Consulta las próximas llegadas al Terminal Pesquero de
+            Chorrillos, descubre especies disponibles y organiza
+            tus compras con información actualizada.
+          </p>
+
+          <div class="d-flex flex-wrap gap-3 mt-4">
+            <a class="button-main" href="#catalogo">
+              Explorar pescado disponible
+              <i class="bi bi-arrow-up-right"></i>
+            </a>
+
+            <a class="button-outline" href="/pescador">
+              <i class="bi bi-person-plus"></i>
+              Soy pescador
+            </a>
+          </div>
         </div>
-      </div></div>
-      <div class="hero-info d-none d-xl-flex align-items-start gap-3">
-        <div class="marker"><i class="bi bi-geo-alt-fill"></i></div>
-        <div><strong>Terminal Pesquero de Chorrillos</strong><small>Información de llegadas y ofertas, próximamente en tiempo real.</small></div>
       </div>
     </div>
   </header>
-  <div class="container feature-band"><div class="row feature-wrap g-0">
-    <div class="col-lg-4 feature"><i class="bi bi-clock-history"></i><div><strong>Menos tiempo de espera</strong><span>Conoce el estado de las embarcaciones.</span></div></div>
-    <div class="col-lg-4 feature"><i class="bi bi-fish"></i><div><strong>Pesca artesanal visible</strong><span>Especies, cantidades y precios referenciales.</span></div></div>
-    <div class="col-lg-4 feature"><i class="bi bi-bag-check"></i><div><strong>Compras mejor planificadas</strong><span>Consulta antes de ir al terminal.</span></div></div>
-  </div></div>
+
+  <!-- BENEFICIOS -->
+  <div class="container feature-band">
+    <div class="row feature-wrap g-0">
+      <div class="col-lg-4 feature">
+        <i class="bi bi-clock-history"></i>
+        <div>
+          <strong>Menos tiempo de espera</strong>
+          <span>Conoce el estado de las embarcaciones.</span>
+        </div>
+      </div>
+
+      <div class="col-lg-4 feature">
+        <i class="bi bi-fish"></i>
+        <div>
+          <strong>Pesca artesanal visible</strong>
+          <span>Especies, cantidades y precios.</span>
+        </div>
+      </div>
+
+      <div class="col-lg-4 feature">
+        <i class="bi bi-bag-check"></i>
+        <div>
+          <strong>Compras mejor planificadas</strong>
+          <span>Consulta antes de ir al terminal.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <main>
-    <section class="content-section" id="llegadas"><div class="container">
-      <div class="d-flex align-items-end justify-content-between flex-wrap gap-3 mb-4">
-        <div><span class="section-kicker">DESDE EL TERMINAL</span><h2 class="section-title">Próximas llegadas</h2><p class="section-copy mb-0">Sigue el estado de las embarcaciones. Esta sección muestra datos ficticios de demostración hasta conectar los registros del pescador.</p></div>
-        <span class="demo-tag"><i class="bi bi-info-circle"></i> Datos ilustrativos · No reales</span>
+
+    <!-- PRÓXIMAS LLEGADAS: EJEMPLOS -->
+    <section class="content-section" id="llegadas">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+          <div>
+            <span class="section-kicker">DESDE EL TERMINAL</span>
+            <h2 class="section-title">Próximas llegadas</h2>
+            <p class="section-copy">
+              Ejemplos visuales de estados de desembarque.
+              La integración de esta sección con registros reales
+              corresponde a la siguiente funcionalidad.
+            </p>
+          </div>
+
+          <span class="demo-tag">
+            <i class="bi bi-info-circle"></i>
+            Datos ilustrativos
+          </span>
+        </div>
+
+        <div class="row g-3">
+
+          <div class="col-md-4">
+            <article class="arrival-card">
+              <div class="d-flex justify-content-between align-items-start">
+                <span class="arrival-icon"><i class="bi bi-water"></i></span>
+                <span class="status returning">● Regresando</span>
+              </div>
+              <h3>Costa Azul</h3>
+              <p>Embarcación de demostración</p>
+              <div class="arrival-foot">
+                <span>Hora estimada<strong>09:30 a. m.</strong></span>
+                <span>Zona<strong>Chorrillos</strong></span>
+              </div>
+            </article>
+          </div>
+
+          <div class="col-md-4">
+            <article class="arrival-card">
+              <div class="d-flex justify-content-between align-items-start">
+                <span class="arrival-icon"><i class="bi bi-compass"></i></span>
+                <span class="status fishing">● En faena</span>
+              </div>
+              <h3>Mar de Plata</h3>
+              <p>Embarcación de demostración</p>
+              <div class="arrival-foot">
+                <span>Hora estimada<strong>Por confirmar</strong></span>
+                <span>Zona<strong>Mar peruano</strong></span>
+              </div>
+            </article>
+          </div>
+
+          <div class="col-md-4">
+            <article class="arrival-card">
+              <div class="d-flex justify-content-between align-items-start">
+                <span class="arrival-icon"><i class="bi bi-anchor"></i></span>
+                <span class="status arrived">● Arribó</span>
+              </div>
+              <h3>Santa Rosa</h3>
+              <p>Embarcación de demostración</p>
+              <div class="arrival-foot">
+                <span>Hora registrada<strong>07:15 a. m.</strong></span>
+                <span>Zona<strong>Terminal</strong></span>
+              </div>
+            </article>
+          </div>
+
+        </div>
       </div>
-      <div class="row g-3">
-        <div class="col-md-4"><article class="arrival-card"><div class="arrival-top"><span class="arrival-icon"><i class="bi bi-water"></i></span><span class="status returning">● Regresando</span></div><h3>Embarcación Costa Azul</h3><p>Desembarque estimado · Referencia ficticia</p><div class="arrival-foot"><span>Hora estimada<strong>09:30 a. m.</strong></span><span>Ubicación<strong>Chorrillos</strong></span></div></article></div>
-        <div class="col-md-4"><article class="arrival-card"><div class="arrival-top"><span class="arrival-icon"><i class="bi bi-compass"></i></span><span class="status fishing">● En faena</span></div><h3>Embarcación Mar de Plata</h3><p>Desembarque estimado · Referencia ficticia</p><div class="arrival-foot"><span>Hora estimada<strong>Por confirmar</strong></span><span>Ubicación<strong>Mar peruano</strong></span></div></article></div>
-        <div class="col-md-4"><article class="arrival-card"><div class="arrival-top"><span class="arrival-icon"><i class="bi bi-anchor"></i></span><span class="status arrived">● Arribó</span></div><h3>Embarcación Santa Rosa</h3><p>Desembarque estimado · Referencia ficticia</p><div class="arrival-foot"><span>Hora registrada<strong>07:15 a. m.</strong></span><span>Ubicación<strong>Terminal</strong></span></div></article></div>
+    </section>
+
+    <!-- CATÁLOGO ÚNICO, CONECTADO A SUPABASE -->
+    <section class="market" id="catalogo">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+          <div>
+            <span class="section-kicker">CATÁLOGO PESQUERO</span>
+            <h2 class="section-title">Del mar a tu mesa</h2>
+            <p class="section-copy mb-0">
+              Conoce las especies, cantidades y precios registrados
+              en la plataforma PescaConecta.
+            </p>
+          </div>
+
+          <span class="demo-tag">
+            <i class="bi bi-database-check"></i>
+            Conectado a Supabase · MVP académico
+          </span>
+        </div>
+
+        <div class="catalog-search">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-8">
+              <label for="filtroEspecie" class="form-label fw-bold small">
+                Buscar especie de pescado
+              </label>
+              <input
+                type="search"
+                id="filtroEspecie"
+                class="form-control"
+                placeholder="Buscar bonito, jurel, caballa..."
+              >
+            </div>
+
+            <div class="col-md-4">
+              <button id="actualizarCatalogo"
+                      type="button"
+                      class="button-outline w-100">
+                <i class="bi bi-arrow-clockwise"></i>
+                Actualizar catálogo
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <p id="estadoCatalogo"
+           class="text-secondary small mb-4"
+           role="status"
+           aria-live="polite">
+          Cargando productos disponibles...
+        </p>
+
+        <div id="catalogoReal" class="row g-4" aria-live="polite"></div>
+
+        <p class="small text-secondary mt-4 mb-0">
+          Las fotografías son ilustrativas. El catálogo contiene
+          registros de demostración y no constituye una oferta comercial real.
+        </p>
+
       </div>
-    </div></section>
-    <section class="market" id="catalogo"><div class="container">
-      <div class="d-flex justify-content-between align-items-end gap-3 flex-wrap mb-4">
-        <div><span class="section-kicker">CATÁLOGO DE REFERENCIA</span><h2 class="section-title">Del mar a tu mesa</h2><p class="section-copy mb-0">Descubre cómo se verán las ofertas del día cuando los pescadores publiquen sus capturas.</p></div>
-        <span class="demo-tag"><i class="bi bi-info-circle"></i> Especies y precios ficticios</span>
+    </section>
+
+    <!-- PERFILES -->
+    <section class="roles" id="perfiles">
+      <div class="container">
+
+        <div class="text-center mb-5">
+          <span class="section-kicker">HECHO PARA TODOS</span>
+          <h2 class="section-title">¿Cómo quieres ingresar?</h2>
+          <p class="section-copy mx-auto">
+            Una plataforma para distintos actores del Terminal
+            Pesquero de Chorrillos.
+          </p>
+        </div>
+
+        <div class="row g-3">
+
+          <div class="col-md-6 col-lg-4">
+            <a href="/pescador" class="role-card">
+              <span class="role-icon"><i class="bi bi-water"></i></span>
+              <span>
+                <h3>Pescador artesanal</h3>
+                <p>Registra tu embarcación y llegada estimada.</p>
+              </span>
+            </a>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <button class="role-card" type="button" data-profile="Público general">
+              <span class="role-icon"><i class="bi bi-basket3"></i></span>
+              <span>
+                <h3>Público general</h3>
+                <p>Consulta los productos disponibles.</p>
+              </span>
+            </button>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <button class="role-card" type="button" data-profile="Restaurante">
+              <span class="role-icon"><i class="bi bi-shop"></i></span>
+              <span>
+                <h3>Restaurante</h3>
+                <p>Encuentra especies para tu negocio.</p>
+              </span>
+            </button>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <button class="role-card" type="button" data-profile="Comerciante">
+              <span class="role-icon"><i class="bi bi-box-seam"></i></span>
+              <span>
+                <h3>Comerciante</h3>
+                <p>Revisa cantidades y precios.</p>
+              </span>
+            </button>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <button class="role-card" type="button" data-profile="Administrador">
+              <span class="role-icon"><i class="bi bi-sliders2"></i></span>
+              <span>
+                <h3>Administrador</h3>
+                <p>Supervisa las operaciones del sistema.</p>
+              </span>
+            </button>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <a href="#como-funciona" class="role-card">
+              <span class="role-icon"><i class="bi bi-question-circle"></i></span>
+              <span>
+                <h3>¿Primera vez aquí?</h3>
+                <p>Descubre cómo funciona PescaConecta.</p>
+              </span>
+            </a>
+          </div>
+
+        </div>
       </div>
-      <div class="row g-4">
-        <div class="col-md-6 col-lg-3"><article class="product-card"><div class="product-photo"><img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=650&q=75" alt="Pescado fresco exhibido" loading="lazy"><span class="pill">Ejemplo</span></div><div class="product-body"><h3>Bonito fresco</h3><p><i class="bi bi-geo-alt me-1"></i> Terminal de Chorrillos · 25 kg de ejemplo</p><div class="product-bottom"><div class="price">S/ 9.50 <small>/ kg</small></div><button class="action-link" data-demo-reserve="Bonito fresco">Ver oferta <i class="bi bi-arrow-right"></i></button></div></div></article></div>
-        <div class="col-md-6 col-lg-3"><article class="product-card"><div class="product-photo"><img src="https://images.unsplash.com/photo-1510130387422-82bed34b37e9?auto=format&fit=crop&w=650&q=75" alt="Producto marino de referencia" loading="lazy"><span class="pill">Ejemplo</span></div><div class="product-body"><h3>Jurel fresco</h3><p><i class="bi bi-geo-alt me-1"></i> Terminal de Chorrillos · 40 kg de ejemplo</p><div class="product-bottom"><div class="price">S/ 7.00 <small>/ kg</small></div><button class="action-link" data-demo-reserve="Jurel fresco">Ver oferta <i class="bi bi-arrow-right"></i></button></div></div></article></div>
-        <div class="col-md-6 col-lg-3"><article class="product-card"><div class="product-photo"><img src="https://images.unsplash.com/photo-1559737558-2f5a35f4523b?auto=format&fit=crop&w=650&q=75" alt="Pescados y mariscos para ilustración" loading="lazy"><span class="pill">Ejemplo</span></div><div class="product-body"><h3>Caballa</h3><p><i class="bi bi-geo-alt me-1"></i> Terminal de Chorrillos · 18 kg de ejemplo</p><div class="product-bottom"><div class="price">S/ 8.00 <small>/ kg</small></div><button class="action-link" data-demo-reserve="Caballa">Ver oferta <i class="bi bi-arrow-right"></i></button></div></div></article></div>
-        <div class="col-md-6 col-lg-3"><article class="product-card"><div class="product-photo"><img src="https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=650&q=75" alt="Producto fresco de referencia" loading="lazy"><span class="pill">Ejemplo</span></div><div class="product-body"><h3>Perico</h3><p><i class="bi bi-geo-alt me-1"></i> Terminal de Chorrillos · 12 kg de ejemplo</p><div class="product-bottom"><div class="price">S/ 15.00 <small>/ kg</small></div><button class="action-link" data-demo-reserve="Perico">Ver oferta <i class="bi bi-arrow-right"></i></button></div></div></article></div>
+    </section>
+
+    <!-- PROCESO -->
+    <section class="steps" id="como-funciona">
+      <div class="container">
+
+        <div class="text-center mb-5">
+          <span class="section-kicker" style="color:#76e6d9">
+            SENCILLO Y DIRECTO
+          </span>
+          <h2 class="section-title">Así funciona PescaConecta</h2>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-4">
+            <span class="step-number">01</span>
+            <h3>El pescador anuncia su llegada</h3>
+            <p>Registra su embarcación y hora estimada de desembarque.</p>
+          </div>
+
+          <div class="col-md-4">
+            <span class="step-number">02</span>
+            <h3>Se publican los productos</h3>
+            <p>El catálogo muestra especies, cantidades y precios.</p>
+          </div>
+
+          <div class="col-md-4">
+            <span class="step-number">03</span>
+            <h3>Los compradores consultan</h3>
+            <p>Revisan los productos antes de organizar su compra.</p>
+          </div>
+        </div>
+
       </div>
-    </div></section>
-    <section class="roles" id="perfiles"><div class="container">
-      <div class="text-center mb-5"><span class="section-kicker">HECHO PARA TODOS</span><h2 class="section-title">¿Cómo quieres ingresar?</h2><p class="section-copy mx-auto">Una sola plataforma para los distintos actores del Terminal Pesquero de Chorrillos.</p></div>
-      <div class="row g-3">
-        <div class="col-md-6 col-lg-4"><button type="button" class="role-card" data-profile="Pescador"><span class="role-icon"><i class="bi bi-water"></i></span><span><h3>Pescador artesanal</h3><p>Anuncia tu llegada y publica lo que has capturado.</p></span></button></div>
-        <div class="col-md-6 col-lg-4"><button type="button" class="role-card" data-profile="Público general"><span class="role-icon"><i class="bi bi-basket3"></i></span><span><h3>Público general</h3><p>Consulta la pesca disponible antes de acercarte.</p></span></button></div>
-        <div class="col-md-6 col-lg-4"><button type="button" class="role-card" data-profile="Restaurante"><span class="role-icon"><i class="bi bi-shop"></i></span><span><h3>Restaurante</h3><p>Encuentra productos para tu cocina y próximos pedidos.</p></span></button></div>
-        <div class="col-md-6 col-lg-4"><button type="button" class="role-card" data-profile="Comerciante"><span class="role-icon"><i class="bi bi-box-seam"></i></span><span><h3>Comerciante</h3><p>Revisa cantidades y precios para abastecerte.</p></span></button></div>
-        <div class="col-md-6 col-lg-4"><button type="button" class="role-card" data-profile="Administrador"><span class="role-icon"><i class="bi bi-sliders2"></i></span><span><h3>Administrador</h3><p>Gestiona publicaciones y supervisa información.</p></span></button></div>
-        <div class="col-md-6 col-lg-4"><a href="#como-funciona" class="role-card"><span class="role-icon"><i class="bi bi-question-circle"></i></span><span><h3>¿Primera vez aquí?</h3><p>Descubre los pasos para usar PescaConecta.</p></span></a></div>
-      </div>
-    </div></section>
-    <section class="steps" id="como-funciona"><div class="container">
-      <div class="text-center mb-5"><span class="section-kicker" style="color:#76e6d9">SENCILLO Y DIRECTO</span><h2 class="section-title">Así funciona PescaConecta</h2></div>
-      <div class="row g-4">
-        <div class="col-md-4"><span class="step-number">01</span><h3>El pescador anuncia su llegada</h3><p>Registra la embarcación y la hora estimada de desembarque desde su celular.</p></div>
-        <div class="col-md-4"><span class="step-number">02</span><h3>Se publican las capturas</h3><p>El catálogo informará especies, cantidades y precios actualizados por los pescadores.</p></div>
-        <div class="col-md-4"><span class="step-number">03</span><h3>Los compradores se organizan</h3><p>Consulta ofertas y, en futuras etapas, solicita reservas antes del arribo.</p></div>
-      </div>
-    </div></section>
+    </section>
+
   </main>
-  <footer><div class="container d-flex justify-content-between flex-wrap align-items-center gap-3"><a class="brand" href="#inicio"><span class="brand-mark"><i class="bi bi-water"></i></span><span>Pesca<span>Conecta</span><small>CHORRILLOS</small></span></a><span>MVP académico · Datos ilustrativos · No representa al Terminal Pesquero oficialmente</span><span>Hecho para conectar al mar con la ciudad.</span></div></footer>
-  <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5" id="profileModalTitle">Perfil seleccionado</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body"><p id="profileModalText" class="mb-3"></p><div class="alert-note"><i class="bi bi-info-circle me-2"></i>Esta pantalla es una demostración de selección de perfiles. Todavía no hay autenticación ni acceso a información privada.</div></div><div class="modal-footer"><button type="button" class="button-outline" data-bs-dismiss="modal">Cerrar</button><a class="button-main" href="#como-funciona" data-bs-dismiss="modal">Conocer el proceso <i class="bi bi-arrow-right"></i></a></div></div></div></div>
-  <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5" id="offerModalTitle">Oferta de demostración</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div><div class="modal-body"><p id="offerModalText"></p><div class="alert-note">Los precios y cantidades son ejemplos visuales, no disponibilidad ni reservas reales. Las operaciones estarán disponibles después de integrar el catálogo con la base de datos.</div></div><div class="modal-footer"><button class="button-main" type="button" data-bs-dismiss="modal">Entendido</button></div></div></div></div>
+
+  <!-- PIE -->
+  <footer>
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <a class="brand" href="#inicio">
+        <span class="brand-mark"><i class="bi bi-water"></i></span>
+        <span>Pesca<span>Conecta</span><small>CHORRILLOS</small></span>
+      </a>
+
+      <span>MVP académico · No representa oficialmente al terminal pesquero</span>
+      <span>Del mar a tu mesa.</span>
+    </div>
+  </footer>
+
+  <!-- MODAL DE PRODUCTO -->
+  <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5 fw-bold" id="offerModalTitle">
+            Detalle del producto
+          </h2>
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body">
+          <p id="offerModalText"></p>
+          <div class="alert alert-info small mb-0">
+            Consulta informativa del MVP académico.
+            La reserva de productos se implementará en el Sprint 3.
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="button-main"
+                  type="button"
+                  data-bs-dismiss="modal">
+            Entendido
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE PERFIL -->
+  <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5 fw-bold" id="profileModalTitle">
+            Perfil seleccionado
+          </h2>
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body">
+          <p id="profileModalText"></p>
+          <div class="alert alert-info small mb-0">
+            El inicio de sesión por perfiles todavía no está habilitado.
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="button-main"
+                  type="button"
+                  data-bs-dismiss="modal">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
+    // SELECCIÓN DE PERFILES
     document.querySelectorAll('[data-profile]').forEach(button => {
       button.addEventListener('click', () => {
-        const profile = button.dataset.profile;
-        if (profile === 'Pescador') {
-            window.location.href = '/pescador';
-            return;
-     }
-        document.getElementById('profileModalTitle').textContent = '¡Bienvenido! · ' + profile;
-        document.getElementById('profileModalText').textContent = 'Has seleccionado el perfil ' + profile + '. Próximamente tendrás un panel específico para este tipo de usuario.';
-        bootstrap.Modal.getOrCreateInstance(document.getElementById('profileModal')).show();
+        const perfil = button.dataset.profile;
+
+        document.getElementById('profileModalTitle').textContent =
+          '¡Bienvenido! · ' + perfil;
+
+        document.getElementById('profileModalText').textContent =
+          'Has seleccionado el perfil: ' + perfil + '.';
+
+        bootstrap.Modal.getOrCreateInstance(
+          document.getElementById('profileModal')
+        ).show();
       });
     });
-    document.querySelectorAll('[data-demo-reserve]').forEach(button => {
-      button.addEventListener('click', () => {
-        document.getElementById('offerModalText').textContent = 'Has seleccionado: ' + button.dataset.demoReserve + '.';
-        bootstrap.Modal.getOrCreateInstance(document.getElementById('offerModal')).show();
+
+    // CATÁLOGO REAL
+    let productosDisponibles = [];
+
+    // Imágenes de referencia para presentación.
+    const imagenesEspecies = {
+      bonito: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=850&q=80',
+      jurel: 'https://images.unsplash.com/photo-1510130387422-82bed34b37e9?auto=format&fit=crop&w=850&q=80',
+      caballa: 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?auto=format&fit=crop&w=850&q=80',
+      perico: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=850&q=80'
+    };
+
+    function obtenerImagen(especie) {
+      const nombre = String(especie || '').toLowerCase();
+
+      for (const [clave, imagen] of Object.entries(imagenesEspecies)) {
+        if (nombre.includes(clave)) {
+          return imagen;
+        }
+      }
+
+      return imagenesEspecies.bonito;
+    }
+
+    function crearElemento(etiqueta, clase, texto) {
+      const elemento = document.createElement(etiqueta);
+
+      if (clase) {
+        elemento.className = clase;
+      }
+
+      if (texto !== undefined) {
+        elemento.textContent = texto;
+      }
+
+      return elemento;
+    }
+
+    function crearTarjetaProducto(producto) {
+      const columna = crearElemento(
+        'div',
+        'col-sm-6 col-lg-4 col-xl-3'
+      );
+
+      const tarjeta = crearElemento('article', 'product-card');
+
+      // IMAGEN
+      const foto = crearElemento('div', 'product-photo');
+      const imagen = document.createElement('img');
+
+      imagen.src = obtenerImagen(producto.especie);
+      imagen.alt = 'Imagen ilustrativa del producto';
+      imagen.loading = 'lazy';
+
+      const etiqueta = crearElemento(
+        'span',
+        'pill',
+        'Producto registrado'
+      );
+
+      foto.append(imagen, etiqueta);
+
+      // INFORMACIÓN
+      const cuerpo = crearElemento('div', 'product-body');
+
+      const titulo = crearElemento(
+        'h3',
+        '',
+        String(producto.especie)
+      );
+
+      const detalle = crearElemento(
+        'p',
+        '',
+        'Terminal de Chorrillos · ' +
+        Number(producto.cantidad_kg).toLocaleString('es-PE') +
+        ' kg disponibles'
+      );
+
+      const inferior = crearElemento('div', 'product-bottom');
+
+      const precio = crearElemento('div', 'price');
+
+      precio.textContent =
+        'S/ ' + Number(producto.precio_kg).toFixed(2);
+
+      const unidad = crearElemento('small', '', ' / kg');
+      precio.appendChild(unidad);
+
+      // DETALLE
+      const boton = crearElemento(
+        'button',
+        'action-link',
+        'Ver detalle →'
+      );
+
+      boton.type = 'button';
+
+      boton.addEventListener('click', () => {
+        document.getElementById('offerModalTitle').textContent =
+          String(producto.especie);
+
+        document.getElementById('offerModalText').textContent =
+          'Especie: ' + producto.especie +
+          ' · Cantidad: ' + producto.cantidad_kg +
+          ' kg · Precio: S/ ' +
+          Number(producto.precio_kg).toFixed(2) + '/kg';
+
+        bootstrap.Modal.getOrCreateInstance(
+          document.getElementById('offerModal')
+        ).show();
       });
-    });
+
+      inferior.append(precio, boton);
+      cuerpo.append(titulo, detalle, inferior);
+      tarjeta.append(foto, cuerpo);
+      columna.appendChild(tarjeta);
+
+      return columna;
+    }
+
+    function mostrarProductos() {
+      const contenedor = document.getElementById('catalogoReal');
+      const estado = document.getElementById('estadoCatalogo');
+
+      const filtro = document.getElementById('filtroEspecie')
+        .value.trim().toLowerCase();
+
+      contenedor.replaceChildren();
+
+      const filtrados = productosDisponibles.filter(producto =>
+        String(producto.especie)
+          .toLowerCase()
+          .includes(filtro)
+      );
+
+      if (filtrados.length === 0) {
+        estado.textContent = productosDisponibles.length === 0
+          ? 'Todavía no hay productos registrados.'
+          : 'No se encontraron productos con ese nombre.';
+        return;
+      }
+
+      estado.textContent =
+        filtrados.length + ' producto(s) disponible(s)';
+
+      filtrados.forEach(producto => {
+        contenedor.appendChild(crearTarjetaProducto(producto));
+      });
+    }
+
+    async function cargarCatalogoReal() {
+      const estado = document.getElementById('estadoCatalogo');
+      const boton = document.getElementById('actualizarCatalogo');
+
+      estado.textContent = 'Consultando productos en Supabase...';
+      boton.disabled = true;
+
+      try {
+        const respuesta = await fetch('/api/productos', {
+          cache: 'no-store'
+        });
+
+        if (!respuesta.ok) {
+          throw new Error('Error HTTP ' + respuesta.status);
+        }
+
+        const resultado = await respuesta.json();
+
+        if (!Array.isArray(resultado.datos)) {
+          throw new Error('Respuesta inesperada de la API');
+        }
+
+        productosDisponibles = resultado.datos;
+        mostrarProductos();
+
+      } catch (error) {
+        productosDisponibles = [];
+        document.getElementById('catalogoReal').replaceChildren();
+
+        estado.textContent =
+          'No se pudo cargar el catálogo: ' + error.message;
+      } finally {
+        boton.disabled = false;
+      }
+    }
+
+    document.getElementById('filtroEspecie')
+      .addEventListener('input', mostrarProductos);
+
+    document.getElementById('actualizarCatalogo')
+      .addEventListener('click', cargarCatalogoReal);
+
+    cargarCatalogoReal();
   </script>
+
 </body>
 </html>
