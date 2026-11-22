@@ -5,7 +5,12 @@ from http.client import HTTPException
 
 from flask import Flask, jsonify, render_template, request
 
-from supabase_client import guardar_embarcacion, obtener_puntos
+from supabase_client import (
+    consultar_productos,
+    guardar_embarcacion,
+    guardar_producto,
+    obtener_puntos,
+)
 
 app = Flask(__name__)
 
@@ -130,6 +135,65 @@ def registrar_embarcacion():
         "message": "Embarcacion registrada",
         "datos": registro,
     }), 201
+
+
+@app.route("/api/productos", methods=["GET"])
+def listar_productos():
+    try:
+        productos = consultar_productos()
+        return jsonify({
+            "status": "ok",
+            "total": len(productos),
+            "datos": productos,
+        }), 200
+    except (HTTPException, OSError, ValueError, TypeError, RuntimeError):
+        app.logger.exception("Error al consultar productos")
+        return jsonify({
+            "status": "error",
+            "message": "No se pudo consultar el catalogo",
+        }), 503
+
+
+@app.route("/api/productos", methods=["POST"])
+def registrar_producto():
+    token = os.getenv("PESCACONECTA_ADMIN_TOKEN", "")
+    recibido = request.headers.get("X-Admin-Token", "")
+
+    if not token or not compare_digest(recibido, token):
+        return jsonify({"status": "error", "message": "No autorizado"}), 403
+
+    datos = request.get_json(silent=True)
+    if not isinstance(datos, dict):
+        return jsonify({"status": "error", "message": "JSON invalido"}), 400
+
+    especie = datos.get("especie")
+    cantidad = datos.get("cantidad_kg")
+    precio = datos.get("precio_kg")
+
+    if not isinstance(especie, str) or not 2 <= len(especie.strip()) <= 100:
+        return jsonify({"status": "error", "message": "Especie invalida"}), 400
+
+    if (
+        type(cantidad) not in (int, float)
+        or type(precio) not in (int, float)
+        or not 0 < cantidad <= 1000000
+        or not 0 <= precio <= 1000000
+    ):
+        return jsonify({"status": "error", "message": "Cantidad o precio invalido"}), 400
+
+    try:
+        producto = guardar_producto({
+            "especie": especie.strip(),
+            "cantidad_kg": cantidad,
+            "precio_kg": precio,
+        })
+        return jsonify({"status": "ok", "datos": producto}), 201
+    except (HTTPException, OSError, ValueError, TypeError, RuntimeError):
+        app.logger.exception("Error al publicar producto")
+        return jsonify({
+            "status": "error",
+            "message": "No se pudo publicar el producto",
+        }), 503
 
 
 

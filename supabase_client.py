@@ -126,3 +126,76 @@ def guardar_embarcacion(datos):
 
     finally:
         conexion.close()
+def consultar_productos():
+    """Devuelve el catálogo de productos disponibles."""
+    return _solicitar_productos("GET")
+
+
+def guardar_producto(datos):
+    """Publica una especie, cantidad y precio."""
+    return _solicitar_productos("POST", datos)
+
+
+def _solicitar_productos(metodo, datos=None):
+    url = os.getenv("SUPABASE_URL", "").rstrip("/")
+    key = os.getenv("SUPABASE_SECRET_KEY", "")
+
+    if not url or not key:
+        raise ValueError("Falta configurar Supabase")
+
+    parsed = urlsplit(url)
+    if (
+        parsed.scheme != "https"
+        or not parsed.hostname
+        or not parsed.hostname.endswith(".supabase.co")
+        or parsed.username
+        or parsed.password
+        or parsed.port is not None
+    ):
+        raise ValueError("URL de Supabase no permitida")
+
+    ruta = "/rest/v1/productos_pesca"
+
+    if metodo == "GET":
+        ruta += (
+            "?select=id,especie,cantidad_kg,precio_kg,disponible"
+            "&disponible=eq.true&order=creado_en.desc"
+        )
+
+    headers = {
+        "apikey": key,
+        "Accept": "application/json",
+    }
+    cuerpo = None
+
+    if metodo == "POST":
+        headers["Content-Type"] = "application/json"
+        headers["Prefer"] = "return=representation"
+        cuerpo = json.dumps(datos)
+
+    conexion = HTTPSConnection(parsed.hostname, timeout=15)
+
+    try:
+        conexion.request(metodo, ruta, body=cuerpo, headers=headers)
+        respuesta = conexion.getresponse()
+        contenido = respuesta.read()
+
+        esperado = 201 if metodo == "POST" else 200
+
+        if respuesta.status != esperado:
+            raise RuntimeError("Error en catálogo de Supabase")
+
+        resultado = json.loads(contenido.decode("utf-8"))
+
+        if not isinstance(resultado, list):
+            raise TypeError("Respuesta inesperada de Supabase")
+
+        if metodo == "POST":
+            if len(resultado) != 1:
+                raise TypeError("Registro inesperado")
+            return resultado[0]
+
+        return resultado
+
+    finally:
+        conexion.close()
