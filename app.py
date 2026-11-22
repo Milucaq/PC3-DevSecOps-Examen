@@ -1,9 +1,11 @@
+import os
 from datetime import datetime
+from hmac import compare_digest
 from http.client import HTTPException
 
 from flask import Flask, jsonify, render_template, request
 
-from supabase_client import obtener_puntos
+from supabase_client import guardar_embarcacion, obtener_puntos
 
 app = Flask(__name__)
 
@@ -95,10 +97,36 @@ def registrar_embarcacion():
             "message": "La fecha debe incluir zona horaria",
         }), 400
 
+    token_configurado = os.getenv("PESCACONECTA_ADMIN_TOKEN", "")
+    token_recibido = request.headers.get("X-Admin-Token", "")
+
+    if not token_configurado or not compare_digest(
+        token_recibido, token_configurado
+    ):
+        return jsonify({
+            "status": "error",
+            "message": "No autorizado",
+        }), 403
+
+    try:
+        registro = guardar_embarcacion({
+            "nombre_embarcacion": nombre_embarcacion,
+            "nombre_pescador": nombre_pescador,
+            "llegada_estimada": fecha.isoformat(),
+            "estado": estado,
+        })
+    except (HTTPException, OSError, ValueError, TypeError, RuntimeError):
+        app.logger.exception("Error al guardar embarcacion")
+        return jsonify({
+            "status": "error",
+            "message": "No se pudo guardar la embarcacion",
+        }), 503
+
     return jsonify({
-        "status": "pendiente",
-        "message": "Datos validados. Falta habilitar el guardado seguro.",
-    }), 501
+        "status": "ok",
+        "message": "Embarcacion registrada",
+        "datos": registro,
+    }), 201
 
 
 
