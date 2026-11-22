@@ -251,3 +251,87 @@ def actualizar_estado_embarcacion(embarcacion_id, estado):
         return registros[0]
     finally:
         conexion.close()
+# SPRINT 3 - Reservas pesqueras
+
+def _solicitar_reservas(metodo, ruta, datos=None):
+    url = os.getenv("SUPABASE_URL", "").rstrip("/")
+    key = os.getenv("SUPABASE_SECRET_KEY", "")
+
+    if not url or not key:
+        raise ValueError("Falta configurar Supabase")
+
+    parsed = urlsplit(url)
+    if (
+        parsed.scheme != "https"
+        or not parsed.hostname
+        or not parsed.hostname.endswith(".supabase.co")
+        or parsed.username
+        or parsed.password
+        or parsed.port is not None
+    ):
+        raise ValueError("URL de Supabase no permitida")
+
+    headers = {"apikey": key, "Accept": "application/json"}
+    cuerpo = None
+
+    if datos is not None:
+        headers["Content-Type"] = "application/json"
+        headers["Prefer"] = "return=representation"
+        cuerpo = json.dumps(datos, ensure_ascii=False)
+
+    conexion = HTTPSConnection(parsed.hostname, timeout=15)
+    try:
+        conexion.request(metodo, ruta, body=cuerpo, headers=headers)
+        respuesta = conexion.getresponse()
+        contenido = respuesta.read()
+
+        esperado = 201 if metodo == "POST" else 200
+        if respuesta.status != esperado:
+            raise RuntimeError("Error al consultar reservas")
+
+        registros = json.loads(contenido.decode("utf-8"))
+        if not isinstance(registros, list):
+            raise TypeError("Respuesta inesperada")
+
+        return registros
+    finally:
+        conexion.close()
+
+
+def consultar_producto_detalle(producto_id):
+    registros = _solicitar_reservas(
+        "GET",
+        "/rest/v1/productos_pesca"
+        f"?id=eq.{producto_id}"
+        "&select=id,especie,cantidad_kg,precio_kg,disponible",
+    )
+    if not registros:
+        raise LookupError("Producto no encontrado")
+    return registros[0]
+
+
+def guardar_reserva(datos):
+    registros = _solicitar_reservas(
+        "POST", "/rest/v1/reservas_pesca", datos
+    )
+    if len(registros) != 1:
+        raise TypeError("Respuesta inesperada")
+    return registros[0]
+
+
+def cambiar_estado_reserva(reserva_id, estado):
+    registros = _solicitar_reservas(
+        "PATCH",
+        f"/rest/v1/reservas_pesca?id=eq.{reserva_id}",
+        {"estado": estado},
+    )
+    if not registros:
+        raise LookupError("Reserva no encontrada")
+    return registros[0]
+def listar_reservas():
+    return _solicitar_reservas(
+        "GET",
+        "/rest/v1/reservas_pesca"
+        "?select=id,producto_id,nombre_comprador,cantidad_kg,estado,creado_en"
+        "&order=creado_en.desc",
+    )

@@ -7,10 +7,14 @@ from uuid import UUID
 from flask import Flask, jsonify, render_template, request
 
 from supabase_client import (
+    listar_reservas,
     actualizar_estado_embarcacion,
+    cambiar_estado_reserva,
+    consultar_producto_detalle,
     consultar_productos,
     guardar_embarcacion,
     guardar_producto,
+    guardar_reserva,
     obtener_puntos,
 )
 
@@ -237,6 +241,146 @@ def actualizar_estado_desembarque(embarcacion_id):
         }), 503
 
     return jsonify({"status": "ok", "datos": registro}), 200
+
+# SPRINT 3 - Detalles y reservas
+
+
+@app.route("/api/productos/<producto_id>", methods=["GET"])
+def detalle_producto(producto_id):
+    try:
+        UUID(producto_id)
+    except ValueError:
+        return jsonify({"status": "error", "message": "ID invalido"}), 400
+
+    try:
+        producto = consultar_producto_detalle(producto_id)
+        return jsonify({"status": "ok", "datos": producto}), 200
+    except LookupError:
+        return jsonify({"status": "error", "message": "No encontrado"}), 404
+    except (HTTPException, OSError, ValueError, TypeError, RuntimeError):
+        app.logger.exception("Error al consultar detalle")
+        return jsonify({"status": "error", "message": "Error de consulta"}), 503
+
+
+@app.route("/api/reservas", methods=["POST"])
+def crear_reserva():
+    # Acceso administrativo provisional para la demostracion.
+    token = os.getenv("PESCACONECTA_ADMIN_TOKEN", "")
+    recibido = request.headers.get("X-Admin-Token", "")
+
+    demo_local = (
+        os.getenv("PESCACONECTA_DEMO_RESERVAS") == "1"
+        and request.remote_addr in ("127.0.0.1", "::1")
+    )
+    autorizado = bool(token) and compare_digest(recibido, token)
+
+    if not (demo_local or autorizado):
+        return jsonify({"status": "error", "message": "No autorizado"}), 403
+
+    datos = request.get_json(silent=True)
+    if not isinstance(datos, dict):
+        return jsonify({"status": "error", "message": "JSON invalido"}), 400
+
+    producto_id = datos.get("producto_id", "")
+    nombre = datos.get("nombre_comprador")
+    cantidad = datos.get("cantidad_kg")
+
+    try:
+        UUID(producto_id)
+    except (ValueError, TypeError, AttributeError):
+        return jsonify({"status": "error", "message": "Producto invalido"}), 400
+
+    if not isinstance(nombre, str) or not 2 <= len(nombre.strip()) <= 120:
+        return jsonify({"status": "error", "message": "Nombre invalido"}), 400
+
+    if (
+        type(cantidad) not in (int, float)
+        or not 0 < cantidad <= 1000000
+    ):
+        return jsonify({"status": "error", "message": "Cantidad invalida"}), 400
+
+    try:
+        producto = consultar_producto_detalle(producto_id)
+        if (
+            not producto.get("disponible")
+            or cantidad > float(producto["cantidad_kg"])
+        ):
+            return jsonify({
+                "status": "error",
+                "message": "Cantidad no disponible",
+            }), 409
+
+        reserva = guardar_reserva({
+            "producto_id": producto_id,
+            "nombre_comprador": nombre.strip(),
+            "cantidad_kg": cantidad,
+            "estado": "Pendiente",
+        })
+        return jsonify({"status": "ok", "datos": reserva}), 201
+    except LookupError:
+        return jsonify({"status": "error", "message": "Producto no encontrado"}), 404
+    except (HTTPException, OSError, ValueError, TypeError, RuntimeError):
+        app.logger.exception("Error al registrar reserva")
+        return jsonify({"status": "error", "message": "Error al reservar"}), 503
+
+
+@app.route("/api/reservas/<reserva_id>/estado", methods=["PATCH"])
+def actualizar_reserva(reserva_id):
+    token = os.getenv("PESCACONECTA_ADMIN_TOKEN", "")
+    recibido = request.headers.get("X-Admin-Token", "")
+
+    if not token or not compare_digest(recibido, token):
+        return jsonify({"status": "error", "message": "No autorizado"}), 403
+
+    try:
+        UUID(reserva_id)
+    except ValueError:
+        return jsonify({"status": "error", "message": "ID invalido"}), 400
+
+    datos = request.get_json(silent=True)
+    if not isinstance(datos, dict) or datos.get("estado") not in (
+        "Confirmada", "Rechazada"
+    ):
+        return jsonify({"status": "error", "message": "Estado invalido"}), 400
+
+    try:
+        reserva = cambiar_estado_reserva(reserva_id, datos["estado"])
+        return jsonify({"status": "ok", "datos": reserva}), 200
+    except LookupError:
+        return jsonify({"status": "error", "message": "Reserva no encontrada"}), 404
+    except (HTTPException, OSError, ValueError, TypeError, RuntimeError):
+        app.logger.exception("Error al actualizar reserva")
+        return jsonify({
+            "status": "error",
+            "message": "Error al actualizar reserva",
+        }), 503
+
+@app.route("/reservas")
+def portal_reservas():
+    return render_template("reservas.html")
+
+
+@app.route("/api/reservas", methods=["GET"])
+def consultar_reservas():
+    token = os.getenv("PESCACONECTA_ADMIN_TOKEN", "")
+    recibido = request.headers.get("X-Admin-Token", "")
+
+    if not token or not compare_digest(recibido, token):
+        return jsonify({"status": "error", "message": "No autorizado"}), 403
+
+    try:
+        registros = listar_reservas()
+        return jsonify({
+            "status": "ok",
+            "total": len(registros),
+            "datos": registros,
+        }), 200
+    except (HTTPException, OSError, ValueError, TypeError, RuntimeError):
+        app.logger.exception("Error consultando reservas")
+        return jsonify({
+            "status": "error",
+            "message": "No se pudieron consultar las reservas",
+        }), 503
 
 
 if __name__ == "__main__":

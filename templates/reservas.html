@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reservas | PescaConecta</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body { background:#f6fafb; color:#172c3d; }
+    .topbar { background:#0b2740; color:white; padding:20px 0; }
+    .topbar a { color:#9ce6df; text-decoration:none; }
+    .panel { background:white; border-radius:18px; padding:28px; box-shadow:0 8px 25px #0b274012; }
+    h1,h2 { color:#0b2740; font-weight:800; }
+    .btn-ocean { background:#008c91; color:white; border:0; }
+    .btn-ocean:hover { background:#00777c; color:white; }
+    .product-image { height:170px; width:100%; object-fit:cover; }
+    .product-item { border:1px solid #e6edf0; border-radius:14px; overflow:hidden; height:100%; }
+    .product-details { padding:16px; }
+    .state { font-weight:700; color:#008c91; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container d-flex justify-content-between align-items-center">
+      <strong><i class="bi bi-water"></i> PescaConecta Chorrillos</strong>
+      <a href="/#catalogo"><i class="bi bi-arrow-left"></i> Volver al catálogo</a>
+    </div>
+  </header>
+
+  <main class="container py-5">
+    <div class="mb-4">
+      <span class="text-success fw-bold">SPRINT 3 · MVP ACADÉMICO</span>
+      <h1 class="mt-2">Reservas de pescado</h1>
+      <p class="text-secondary">
+        Selecciona un producto y registra una reserva.
+        También puedes demostrar la confirmación o rechazo administrativo.
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <section class="panel h-100">
+          <h2 class="h4 mb-3">1. Seleccionar producto</h2>
+          <p id="estadoProductos" class="text-secondary">Cargando productos...</p>
+          <div id="listaProductos" class="row g-3 mb-4"></div>
+
+          <h2 class="h4 mb-3">2. Solicitar reserva</h2>
+          <form id="formReserva">
+            <div class="mb-3">
+              <label for="producto" class="form-label">Producto</label>
+              <select id="producto" class="form-select" required></select>
+            </div>
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre del comprador</label>
+              <input id="nombre" class="form-control" minlength="2"
+                     maxlength="120" required placeholder="Comprador de prueba">
+            </div>
+            <div class="mb-3">
+              <label for="cantidad" class="form-label">Cantidad a reservar (kg)</label>
+              <input id="cantidad" type="number" class="form-control"
+                     min="0.01" step="0.01" required placeholder="5">
+            </div>
+            <button type="submit" class="btn btn-ocean px-4">
+              <i class="bi bi-bag-check"></i> Solicitar reserva
+            </button>
+          </form>
+          <div id="resultadoReserva" class="mt-3" role="status"></div>
+        </section>
+      </div>
+
+      <div class="col-lg-5">
+        <section class="panel h-100">
+          <h2 class="h4 mb-2">3. Gestión administrativa</h2>
+          <p class="small text-secondary">
+            Solo el evaluador o administrador autorizado debe ingresar
+            el token configurado en el servidor. No se almacena.
+          </p>
+          <div class="mb-3">
+            <label for="adminToken" class="form-label">Token administrativo</label>
+            <input id="adminToken" type="password" class="form-control"
+                   autocomplete="off" placeholder="Token de la demostración">
+          </div>
+          <button id="verReservas" class="btn btn-ocean" type="button">
+            <i class="bi bi-arrow-clockwise"></i> Consultar reservas
+          </button>
+          <p id="estadoReservas" class="small mt-3" role="status"></p>
+          <div id="reservasRegistradas" class="d-grid gap-3"></div>
+        </section>
+      </div>
+    </div>
+    <p class="small text-secondary mt-4">
+      Entorno de demostración: los datos guardados son pruebas académicas.
+      Esta pantalla no implementa autenticación de usuarios.
+    </p>
+  </main>
+
+  <script>
+    let productos = [];
+    const $ = id => document.getElementById(id);
+
+    const imagenes = {
+      bonito: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80',
+      jurel: 'https://images.unsplash.com/photo-1510130387422-82bed34b37e9?auto=format&fit=crop&w=600&q=80',
+      caballa: 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?auto=format&fit=crop&w=600&q=80'
+    };
+
+    function imagenProducto(especie) {
+      const nombre = String(especie).toLowerCase();
+      return Object.entries(imagenes).find(([clave]) =>
+        nombre.includes(clave)
+      )?.[1] || imagenes.bonito;
+    }
+
+    function mensaje(id, texto, exito) {
+      const caja = $(id);
+      caja.textContent = texto;
+      caja.className = 'mt-3 alert ' + (exito ? 'alert-success' : 'alert-danger');
+    }
+
+    async function cargarProductos() {
+      try {
+        const respuesta = await fetch('/api/productos', {cache:'no-store'});
+        if (!respuesta.ok) throw Error('HTTP ' + respuesta.status);
+        const datos = await respuesta.json();
+        productos = datos.datos || [];
+
+        $('listaProductos').replaceChildren();
+        $('producto').replaceChildren();
+
+        for (const p of productos) {
+          const opcion = document.createElement('option');
+          opcion.value = p.id;
+          opcion.textContent = p.especie + ' · S/ ' + p.precio_kg + '/kg';
+          $('producto').appendChild(opcion);
+
+          const columna = document.createElement('div');
+          columna.className = 'col-sm-6';
+          const tarjeta = document.createElement('article');
+          tarjeta.className = 'product-item';
+          const imagen = document.createElement('img');
+          imagen.className = 'product-image';
+          imagen.src = imagenProducto(p.especie);
+          imagen.alt = 'Fotografía ilustrativa de pescado';
+          const info = document.createElement('div');
+          info.className = 'product-details';
+          const nombre = document.createElement('h3');
+          nombre.className = 'h6 fw-bold';
+          nombre.textContent = p.especie;
+          const detalle = document.createElement('p');
+          detalle.className = 'small mb-2';
+          detalle.textContent = p.cantidad_kg + ' kg · S/ ' + p.precio_kg + '/kg';
+          const elegir = document.createElement('button');
+          elegir.className = 'btn btn-sm btn-outline-success';
+          elegir.textContent = 'Seleccionar';
+          elegir.type = 'button';
+          elegir.onclick = () => {
+            $('producto').value = p.id;
+            $('nombre').focus();
+          };
+          info.append(nombre, detalle, elegir);
+          tarjeta.append(imagen, info);
+          columna.appendChild(tarjeta);
+          $('listaProductos').appendChild(columna);
+        }
+        const productoSolicitado =
+            new URLSearchParams(window.location.search).get('producto');
+
+        if (
+            productoSolicitado &&
+            productos.some(p => p.id === productoSolicitado)
+        ) {
+             $('producto').value = productoSolicitado;
+        }
+
+        $('estadoProductos').textContent =
+          productos.length + ' producto(s) disponibles';
+        $('formReserva').querySelector('button[type=submit]').disabled =
+          productos.length === 0;
+      } catch (error) {
+        $('estadoProductos').textContent =
+          'Error cargando productos: ' + error.message;
+      }
+    }
+
+    $('formReserva').addEventListener('submit', async evento => {
+      evento.preventDefault();
+      const boton = $('formReserva').querySelector('button[type=submit]');
+      boton.disabled = true;
+
+      try {
+        const producto_id = $('producto').value;
+        const nombre_comprador = $('nombre').value.trim();
+        const cantidad_kg = Number($('cantidad').value);
+        const seleccionado = productos.find(p => p.id === producto_id);
+
+        if (!seleccionado || cantidad_kg > Number(seleccionado.cantidad_kg)) {
+          throw Error('La cantidad supera la disponibilidad');
+        }
+
+        const respuesta = await fetch('/api/reservas', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            producto_id, nombre_comprador, cantidad_kg
+          })
+        });
+        const datos = await respuesta.json();
+        if (!respuesta.ok) throw Error(datos.message || 'No se pudo reservar');
+
+        mensaje('resultadoReserva',
+          '¡Reserva registrada en Supabase! Estado: Pendiente. ID: ' +
+          datos.datos.id, true);
+        $('formReserva').reset();
+      } catch (error) {
+        mensaje('resultadoReserva', error.message, false);
+      } finally {
+        boton.disabled = false;
+      }
+    });
+
+    async function cargarReservas() {
+      const token = $('adminToken').value;
+      if (!token) {
+        $('estadoReservas').textContent = 'Ingresa el token administrativo.';
+        return;
+      }
+
+      $('estadoReservas').textContent = 'Consultando reservas...';
+      $('reservasRegistradas').replaceChildren();
+
+      try {
+        const respuesta = await fetch('/api/reservas', {
+          headers: {'X-Admin-Token': token},
+          cache: 'no-store'
+        });
+        const datos = await respuesta.json();
+        if (!respuesta.ok) throw Error(datos.message || 'Acceso denegado');
+
+        $('estadoReservas').textContent = datos.total + ' reserva(s)';
+
+        for (const reserva of datos.datos) {
+          const tarjeta = document.createElement('div');
+          tarjeta.className = 'border rounded-3 p-3 bg-light';
+          const titulo = document.createElement('strong');
+          titulo.textContent = reserva.nombre_comprador;
+          const detalle = document.createElement('p');
+          detalle.className = 'small text-secondary my-2';
+          detalle.textContent =
+            'Cantidad: ' + reserva.cantidad_kg + ' kg';
+          const estado = document.createElement('p');
+          estado.className = 'state mb-2';
+          estado.textContent = 'Estado: ' + reserva.estado;
+          tarjeta.append(titulo, detalle, estado);
+
+          if (reserva.estado === 'Pendiente') {
+            for (const nuevoEstado of ['Confirmada', 'Rechazada']) {
+              const boton = document.createElement('button');
+              boton.type = 'button';
+              boton.className = nuevoEstado === 'Confirmada'
+                ? 'btn btn-sm btn-success me-2'
+                : 'btn btn-sm btn-outline-danger';
+              boton.textContent =
+                nuevoEstado === 'Confirmada' ? 'Confirmar' : 'Rechazar';
+
+              boton.onclick = async () => {
+                boton.disabled = true;
+                try {
+                  const r = await fetch(
+                    '/api/reservas/' + reserva.id + '/estado', {
+                      method: 'PATCH',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'X-Admin-Token': $('adminToken').value
+                      },
+                      body: JSON.stringify({estado:nuevoEstado})
+                    }
+                  );
+                  const d = await r.json();
+                  if (!r.ok) throw Error(d.message || 'No actualizado');
+                  await cargarReservas();
+                } catch (error) {
+                  $('estadoReservas').textContent = error.message;
+                  boton.disabled = false;
+                }
+              };
+              tarjeta.appendChild(boton);
+            }
+          }
+          $('reservasRegistradas').appendChild(tarjeta);
+        }
+      } catch (error) {
+        $('estadoReservas').textContent = error.message;
+      }
+    }
+
+    $('verReservas').addEventListener('click', cargarReservas);
+    cargarProductos();
+  </script>
+</body>
+</html>
