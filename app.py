@@ -2,10 +2,12 @@ import os
 from datetime import datetime
 from hmac import compare_digest
 from http.client import HTTPException
+from uuid import UUID
 
 from flask import Flask, jsonify, render_template, request
 
 from supabase_client import (
+    actualizar_estado_embarcacion,
     consultar_productos,
     guardar_embarcacion,
     guardar_producto,
@@ -195,7 +197,46 @@ def registrar_producto():
             "message": "No se pudo publicar el producto",
         }), 503
 
+@app.route("/api/embarcaciones/<embarcacion_id>/estado", methods=["PATCH"])
+def actualizar_estado_desembarque(embarcacion_id):
+    token = os.getenv("PESCACONECTA_ADMIN_TOKEN", "")
+    recibido = request.headers.get("X-Admin-Token", "")
 
+    if not token or not compare_digest(recibido, token):
+        return jsonify({"status": "error", "message": "No autorizado"}), 403
+
+    try:
+        UUID(embarcacion_id)
+    except ValueError:
+        return jsonify({"status": "error", "message": "ID invalido"}), 400
+
+    datos = request.get_json(silent=True)
+
+    if not isinstance(datos, dict) or datos.get("estado") not in (
+        "En faena", "Regresando", "Arribó"
+    ):
+        return jsonify({
+            "status": "error",
+            "message": "Estado invalido",
+        }), 400
+
+    try:
+        registro = actualizar_estado_embarcacion(
+            embarcacion_id, datos["estado"]
+        )
+    except LookupError:
+        return jsonify({
+            "status": "error",
+            "message": "Embarcacion no encontrada",
+        }), 404
+    except (HTTPException, OSError, ValueError, TypeError, RuntimeError):
+        app.logger.exception("Error al actualizar desembarque")
+        return jsonify({
+            "status": "error",
+            "message": "No se pudo actualizar el desembarque",
+        }), 503
+
+    return jsonify({"status": "ok", "datos": registro}), 200
 
 
 if __name__ == "__main__":

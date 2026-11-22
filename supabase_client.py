@@ -199,3 +199,55 @@ def _solicitar_productos(metodo, datos=None):
 
     finally:
         conexion.close()
+def actualizar_estado_embarcacion(embarcacion_id, estado):
+    """Actualiza el estado de una embarcacion registrada."""
+    url = os.getenv("SUPABASE_URL", "").rstrip("/")
+    key = os.getenv("SUPABASE_SECRET_KEY", "")
+
+    if not url or not key:
+        raise ValueError("Falta configurar Supabase")
+
+    parsed = urlsplit(url)
+    if (
+        parsed.scheme != "https"
+        or not parsed.hostname
+        or not parsed.hostname.endswith(".supabase.co")
+        or parsed.username
+        or parsed.password
+        or parsed.port is not None
+    ):
+        raise ValueError("URL de Supabase no permitida")
+
+    ruta = f"/rest/v1/embarcaciones?id=eq.{embarcacion_id}"
+    conexion = HTTPSConnection(parsed.hostname, timeout=15)
+
+    try:
+        conexion.request(
+            "PATCH",
+            ruta,
+            body=json.dumps({"estado": estado}),
+            headers={
+                "apikey": key,
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Prefer": "return=representation",
+            },
+        )
+
+        respuesta = conexion.getresponse()
+        contenido = respuesta.read()
+
+        if respuesta.status != 200:
+            raise RuntimeError("Error al actualizar desembarque")
+
+        registros = json.loads(contenido.decode("utf-8"))
+
+        if not isinstance(registros, list):
+            raise TypeError("Respuesta inesperada")
+
+        if not registros:
+            raise LookupError("Embarcacion no encontrada")
+
+        return registros[0]
+    finally:
+        conexion.close()
