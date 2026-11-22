@@ -7,7 +7,6 @@ from uuid import UUID
 from flask import Flask, jsonify, render_template, request
 
 from supabase_client import (
-    listar_reservas,
     actualizar_estado_embarcacion,
     cambiar_estado_reserva,
     consultar_producto_detalle,
@@ -15,6 +14,7 @@ from supabase_client import (
     guardar_embarcacion,
     guardar_producto,
     guardar_reserva,
+    listar_reservas,
     obtener_puntos,
 )
 
