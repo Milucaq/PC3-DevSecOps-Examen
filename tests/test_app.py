@@ -15,7 +15,7 @@ def test_pagina_principal(client):
     respuesta = client.get("/")
 
     assert respuesta.status_code == 200
-    assert b"PC3 - DevSecOps" in respuesta.data
+    assert b"PescaConecta" in respuesta.data
 
 
 def test_api_health(client):
