@@ -14,6 +14,9 @@ app = Flask(__name__)
 def inicio():
     return render_template("index.html")
 
+@app.route("/pescador")
+def portal_pescador():
+    return render_template("pescador.html")
 
 @app.route("/api/health")
 def health():

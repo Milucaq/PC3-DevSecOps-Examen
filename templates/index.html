@@ -204,6 +204,10 @@
     document.querySelectorAll('[data-profile]').forEach(button => {
       button.addEventListener('click', () => {
         const profile = button.dataset.profile;
+        if (profile === 'Pescador') {
+            window.location.href = '/pescador';
+            return;
+     }
         document.getElementById('profileModalTitle').textContent = '¡Bienvenido! · ' + profile;
         document.getElementById('profileModalText').textContent = 'Has seleccionado el perfil ' + profile + '. Próximamente tendrás un panel específico para este tipo de usuario.';
         bootstrap.Modal.getOrCreateInstance(document.getElementById('profileModal')).show();

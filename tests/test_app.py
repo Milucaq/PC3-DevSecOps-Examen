@@ -226,3 +226,8 @@ def test_registro_estado_por_defecto(
 
     assert respuesta.status_code == 201
     assert respuesta.get_json()["datos"]["estado"] == "En faena"
+def test_portal_pescador(client):
+    respuesta = client.get("/pescador")
+
+    assert respuesta.status_code == 200
+    assert b"formEmbarcacion" in respuesta.data
