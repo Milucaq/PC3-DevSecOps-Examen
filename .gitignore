@@ -8,3 +8,5 @@ __pycache__/
 .vercel/
 .coverage
 htmlcov/
+coverage.xml
+pytest-results.xml
