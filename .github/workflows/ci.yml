@@ -1,0 +1,235 @@
+name: PC3 DevSecOps - Pipeline CI
+
+on:
+  push:
+    branches: [main, test]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  # =========================================
+  # FASE 1: CALIDAD, SEGURIDAD E INTEGRIDAD
+  # =========================================
+
+  calidad:
+    name: "1. Calidad y Estilo (Ruff)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Instalar Ruff
+        run: python -m pip install ruff
+
+      - name: Analizar calidad del codigo
+        run: ruff check app.py supabase_client.py tests/
+
+      - name: Verificar sintaxis Python
+        run: python -m compileall -q app.py tests/
+
+  seguridad:
+    name: "2. Seguridad y Librerias (SAST + SCA)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install bandit pip-audit
+
+      - name: Comprobar dependencias
+        run: python -m pip check
+
+      - name: Verificar archivos sensibles
+        shell: bash
+        run: |
+          if git ls-files | grep -E '(^|/)(\\.env(\\..*)?|[^/]+\\.(pem|key|sqlite3|db))$' | grep -v -E '(^|/)\\.env\\.example$'; then
+            echo "ERROR: Se detectaron archivos sensibles versionados"
+            exit 1
+          fi
+
+          echo "Higiene de archivos verificada"
+
+      - name: Analisis SAST con Bandit
+        run: bandit -r app.py supabase_client.py -ll -f json -o bandit-report.json
+
+      - name: Auditoria de dependencias con pip-audit
+        run: pip-audit -r requirements.txt --format json --output pip-audit-report.json
+
+      - name: Publicar reportes de seguridad
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pc3-security-reports
+          path: |
+            bandit-report.json
+            pip-audit-report.json
+          if-no-files-found: warn
+
+  integridad:
+    name: "3. Integridad Criptografica (SHA-256)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Generar manifiesto SHA-256
+        shell: bash
+        run: sha256sum app.py supabase_client.py requirements.txt templates/index.html tests/test_app.py > source-sha256.txt
+
+      - name: Verificar manifiesto SHA-256
+        run: sha256sum -c source-sha256.txt
+
+      - name: Publicar evidencia de integridad
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pc3-integrity-report
+          path: source-sha256.txt
+          if-no-files-found: warn
+
+  # =========================================
+  # FASE 2: PRUEBAS AUTOMATIZADAS
+  # =========================================
+
+  unitarias:
+    name: "4. Pruebas Unitarias Flask"
+    needs: [calidad, seguridad, integridad]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install pytest
+
+      - name: Ejecutar pruebas unitarias
+        run: python -m pytest tests/test_app.py -v --junitxml=unit-tests.xml
+
+      - name: Publicar resultados de pruebas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pc3-unit-tests
+          path: unit-tests.xml
+          if-no-files-found: warn
+
+  cobertura:
+    name: "5. Integracion y Cobertura (Pytest)"
+    needs: [calidad, seguridad, integridad]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install pytest pytest-cov
+
+      - name: Ejecutar pruebas y cobertura
+        run: python -m pytest tests/ -v --cov=app --cov-fail-under=90 --cov-report=term-missing --cov-report=xml:coverage.xml --junitxml=pytest-results.xml
+
+      - name: Publicar evidencia de pruebas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pc3-test-results
+          path: |
+            coverage.xml
+            pytest-results.xml
+          if-no-files-found: warn
+
+  # =========================================
+  # FASE 3: QUALITY GATE
+  # =========================================
+
+  quality_gate:
+    name: "6. Quality Gate y Resumen Ejecutivo"
+    if: always()
+    needs:
+      - calidad
+      - seguridad
+      - integridad
+      - unitarias
+      - cobertura
+    runs-on: ubuntu-latest
+
+    env:
+      CALIDAD: ${{ needs.calidad.result }}
+      SEGURIDAD: ${{ needs.seguridad.result }}
+      INTEGRIDAD: ${{ needs.integridad.result }}
+      UNITARIAS: ${{ needs.unitarias.result }}
+      COBERTURA: ${{ needs.cobertura.result }}
+
+    steps:
+      - name: Generar resumen ejecutivo
+        shell: bash
+        run: |
+          {
+            echo "# Resumen Acumulado del Pipeline CI - PC3 DevSecOps"
+            echo ""
+            echo "| Etapa | Herramientas / Alcance | Estado |"
+            echo "|---|---|---|"
+            echo "| 1. Calidad y Estilo | Ruff + Sintaxis Python | $CALIDAD |"
+            echo "| 2. Seguridad y Librerias | Bandit + pip-audit + pip check + Higiene Git | $SEGURIDAD |"
+            echo "| 3. Integridad Criptografica | SHA-256 | $INTEGRIDAD |"
+            echo "| 4. Pruebas Unitarias | Pytest Flask | $UNITARIAS |"
+            echo "| 5. Integracion y Cobertura | Pytest + pytest-cov | $COBERTURA |"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [[ "$CALIDAD" == "success" &&
+                "$SEGURIDAD" == "success" &&
+                "$INTEGRIDAD" == "success" &&
+                "$UNITARIAS" == "success" &&
+                "$COBERTURA" == "success" ]]; then
+
+            echo "## Resultado Global: APROBADO" >> "$GITHUB_STEP_SUMMARY"
+            echo "Todas las etapas finalizaron correctamente." >> "$GITHUB_STEP_SUMMARY"
+
+          else
+
+            echo "## Resultado Global: RECHAZADO" >> "$GITHUB_STEP_SUMMARY"
+            echo "Una o mas etapas fallaron o no se ejecutaron." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+
+          fi
