@@ -231,3 +231,163 @@ def test_portal_pescador(client):
 
     assert respuesta.status_code == 200
     assert b"formEmbarcacion" in respuesta.data
+# Sprint 2 - Catalogo pesquero
+
+
+def test_catalogo_productos(client, monkeypatch):
+    monkeypatch.setattr(
+        "app.consultar_productos",
+        lambda: [{"especie": "Bonito", "cantidad_kg": 50}],
+    )
+    respuesta = client.get("/api/productos")
+    assert respuesta.status_code == 200
+    assert respuesta.get_json()["total"] == 1
+
+
+def test_catalogo_error(client, monkeypatch):
+    def fallo():
+        raise RuntimeError("Error simulado")
+
+    monkeypatch.setattr("app.consultar_productos", fallo)
+    assert client.get("/api/productos").status_code == 503
+
+
+def test_publicar_producto(client, monkeypatch):
+    monkeypatch.setenv("PESCACONECTA_ADMIN_TOKEN", "token-prueba")
+    monkeypatch.setattr(
+        "app.guardar_producto",
+        lambda datos: {"id": "demo", **datos},
+    )
+
+    respuesta = client.post(
+        "/api/productos",
+        json={"especie": "Bonito", "cantidad_kg": 50, "precio_kg": 9.5},
+        headers={"X-Admin-Token": "token-prueba"},
+    )
+    assert respuesta.status_code == 201
+    assert respuesta.get_json()["datos"]["especie"] == "Bonito"
+
+
+def test_publicar_sin_autorizacion(client):
+    respuesta = client.post(
+        "/api/productos",
+        json={"especie": "Bonito", "cantidad_kg": 50, "precio_kg": 9.5},
+    )
+    assert respuesta.status_code == 403
+
+
+@pytest.mark.parametrize("datos", [
+    None,
+    {"especie": "A", "cantidad_kg": 50, "precio_kg": 9},
+    {"especie": 123, "cantidad_kg": 50, "precio_kg": 9},
+    {"especie": "Bonito", "cantidad_kg": "50", "precio_kg": 9},
+    {"especie": "Bonito", "cantidad_kg": 50, "precio_kg": True},
+    {"especie": "Bonito", "cantidad_kg": -5, "precio_kg": 9},
+])
+def test_publicacion_invalida(client, monkeypatch, datos):
+    monkeypatch.setenv("PESCACONECTA_ADMIN_TOKEN", "token-prueba")
+    respuesta = client.post(
+        "/api/productos",
+        json=datos,
+        headers={"X-Admin-Token": "token-prueba"},
+    )
+    assert respuesta.status_code == 400
+
+
+def test_publicacion_error_supabase(client, monkeypatch):
+    monkeypatch.setenv("PESCACONECTA_ADMIN_TOKEN", "token-prueba")
+
+    def fallo(datos):
+        raise RuntimeError("Error simulado")
+
+    monkeypatch.setattr("app.guardar_producto", fallo)
+
+    respuesta = client.post(
+        "/api/productos",
+        json={"especie": "Bonito", "cantidad_kg": 50, "precio_kg": 9.5},
+        headers={"X-Admin-Token": "token-prueba"},
+    )
+    assert respuesta.status_code == 503
+# PC3EX-9 - Actualizar estado de desembarque
+
+ID_EMBARCACION = "123e4567-e89b-42d3-a456-426614174000"
+
+
+def test_actualizar_desembarque(client, monkeypatch):
+    monkeypatch.setenv("PESCACONECTA_ADMIN_TOKEN", "token-prueba")
+    monkeypatch.setattr(
+        "app.actualizar_estado_embarcacion",
+        lambda identificador, estado: {
+            "id": identificador,
+            "estado": estado,
+        },
+    )
+
+    respuesta = client.patch(
+        f"/api/embarcaciones/{ID_EMBARCACION}/estado",
+        json={"estado": "Arribó"},
+        headers={"X-Admin-Token": "token-prueba"},
+    )
+
+    assert respuesta.status_code == 200
+    assert respuesta.get_json()["datos"]["estado"] == "Arribó"
+
+
+def test_actualizar_desembarque_sin_token(client):
+    respuesta = client.patch(
+        f"/api/embarcaciones/{ID_EMBARCACION}/estado",
+        json={"estado": "Arribó"},
+    )
+    assert respuesta.status_code == 403
+
+
+def test_actualizar_desembarque_id_invalido(client, monkeypatch):
+    monkeypatch.setenv("PESCACONECTA_ADMIN_TOKEN", "token-prueba")
+    respuesta = client.patch(
+        "/api/embarcaciones/invalido/estado",
+        json={"estado": "Arribó"},
+        headers={"X-Admin-Token": "token-prueba"},
+    )
+    assert respuesta.status_code == 400
+
+
+def test_actualizar_desembarque_estado_invalido(client, monkeypatch):
+    monkeypatch.setenv("PESCACONECTA_ADMIN_TOKEN", "token-prueba")
+    respuesta = client.patch(
+        f"/api/embarcaciones/{ID_EMBARCACION}/estado",
+        json={"estado": "Desconocido"},
+        headers={"X-Admin-Token": "token-prueba"},
+    )
+    assert respuesta.status_code == 400
+
+
+def test_actualizar_desembarque_no_encontrado(client, monkeypatch):
+    monkeypatch.setenv("PESCACONECTA_ADMIN_TOKEN", "token-prueba")
+
+    def no_encontrado(identificador, estado):
+        raise LookupError("No encontrado")
+
+    monkeypatch.setattr("app.actualizar_estado_embarcacion", no_encontrado)
+
+    respuesta = client.patch(
+        f"/api/embarcaciones/{ID_EMBARCACION}/estado",
+        json={"estado": "Arribó"},
+        headers={"X-Admin-Token": "token-prueba"},
+    )
+    assert respuesta.status_code == 404
+
+
+def test_actualizar_desembarque_error(client, monkeypatch):
+    monkeypatch.setenv("PESCACONECTA_ADMIN_TOKEN", "token-prueba")
+
+    def fallo(identificador, estado):
+        raise RuntimeError("Error simulado")
+
+    monkeypatch.setattr("app.actualizar_estado_embarcacion", fallo)
+
+    respuesta = client.patch(
+        f"/api/embarcaciones/{ID_EMBARCACION}/estado",
+        json={"estado": "Arribó"},
+        headers={"X-Admin-Token": "token-prueba"},
+    )
+    assert respuesta.status_code == 503
