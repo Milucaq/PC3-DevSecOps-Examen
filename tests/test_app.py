@@ -78,3 +78,131 @@ def test_api_puntos_error(client, monkeypatch):
     assert datos["message"] == (
         "No se pudieron consultar los puntos"
     )
+    
+ # HU-03 (PC3EX-8): pruebas del registro de embarcaciones
+
+@pytest.fixture
+def embarcacion_valida():
+    return {
+        "nombre_embarcacion": "Mar Azul",
+        "nombre_pescador": "Juan Perez",
+        "llegada_estimada": "2026-11-22T10:30:00-05:00",
+        "estado": "Regresando",
+    }
+
+
+@pytest.mark.parametrize("contenido", [
+    None,
+    [],
+    "texto",
+])
+def test_registro_rechaza_json_invalido(client, contenido):
+    respuesta = client.post(
+        "/api/embarcaciones",
+        json=contenido,
+    )
+
+    assert respuesta.status_code == 400
+    assert respuesta.get_json()["status"] == "error"
+
+
+@pytest.mark.parametrize("campo,valor", [
+    ("nombre_embarcacion", None),
+    ("nombre_pescador", 123),
+    ("llegada_estimada", None),
+    ("estado", 999),
+])
+def test_registro_rechaza_tipos_invalidos(
+    client, embarcacion_valida, campo, valor
+):
+    datos = embarcacion_valida.copy()
+    datos[campo] = valor
+
+    respuesta = client.post(
+        "/api/embarcaciones",
+        json=datos,
+    )
+
+    assert respuesta.status_code == 400
+    assert respuesta.get_json()["status"] == "error"
+
+
+@pytest.mark.parametrize("campo,valor", [
+    ("nombre_embarcacion", "A"),
+    ("nombre_embarcacion", "A" * 121),
+    ("nombre_pescador", " "),
+    ("nombre_pescador", "B" * 121),
+])
+def test_registro_rechaza_nombres_invalidos(
+    client, embarcacion_valida, campo, valor
+):
+    datos = embarcacion_valida.copy()
+    datos[campo] = valor
+
+    respuesta = client.post(
+        "/api/embarcaciones",
+        json=datos,
+    )
+
+    assert respuesta.status_code == 400
+
+
+def test_registro_rechaza_estado_invalido(
+    client, embarcacion_valida
+):
+    datos = embarcacion_valida.copy()
+    datos["estado"] = "Volando"
+
+    respuesta = client.post(
+        "/api/embarcaciones",
+        json=datos,
+    )
+
+    assert respuesta.status_code == 400
+    assert "Estado" in respuesta.get_json()["message"]
+
+
+@pytest.mark.parametrize("fecha", [
+    "fecha-invalida",
+    "2026-11-22T10:30:00",
+])
+def test_registro_rechaza_fecha_invalida(
+    client, embarcacion_valida, fecha
+):
+    datos = embarcacion_valida.copy()
+    datos["llegada_estimada"] = fecha
+
+    respuesta = client.post(
+        "/api/embarcaciones",
+        json=datos,
+    )
+
+    assert respuesta.status_code == 400
+    assert "zona horaria" in respuesta.get_json()["message"]
+
+
+def test_registro_valido_pendiente_de_persistencia(
+    client, embarcacion_valida
+):
+    respuesta = client.post(
+        "/api/embarcaciones",
+        json=embarcacion_valida,
+    )
+
+    assert respuesta.status_code == 501
+    assert respuesta.get_json()["status"] == "pendiente"
+
+
+def test_registro_estado_por_defecto(
+    client, embarcacion_valida
+):
+    datos = embarcacion_valida.copy()
+    datos.pop("estado")
+
+    respuesta = client.post(
+        "/api/embarcaciones",
+        json=datos,
+    )
+
+    assert respuesta.status_code == 501
+    assert respuesta.get_json()["status"] == "pendiente"   
