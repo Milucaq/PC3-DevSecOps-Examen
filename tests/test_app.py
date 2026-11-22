@@ -181,28 +181,48 @@ def test_registro_rechaza_fecha_invalida(
     assert "zona horaria" in respuesta.get_json()["message"]
 
 
-def test_registro_valido_pendiente_de_persistencia(
-    client, embarcacion_valida
-):
+def test_registro_valido(client, embarcacion_valida, monkeypatch):
+    monkeypatch.setenv("PESCACONECTA_ADMIN_TOKEN", "token-prueba")
+
+    def guardar_simulado(datos):
+        return {"id": "demo-001", **datos}
+
+    monkeypatch.setattr(
+        "app.guardar_embarcacion",
+        guardar_simulado,
+    )
+
     respuesta = client.post(
         "/api/embarcaciones",
         json=embarcacion_valida,
+        headers={"X-Admin-Token": "token-prueba"},
     )
 
-    assert respuesta.status_code == 501
-    assert respuesta.get_json()["status"] == "pendiente"
+    assert respuesta.status_code == 201
+    assert respuesta.get_json()["status"] == "ok"
 
 
 def test_registro_estado_por_defecto(
-    client, embarcacion_valida
+    client, embarcacion_valida, monkeypatch
 ):
+    monkeypatch.setenv("PESCACONECTA_ADMIN_TOKEN", "token-prueba")
+
+    def guardar_simulado(datos):
+        return datos
+
+    monkeypatch.setattr(
+        "app.guardar_embarcacion",
+        guardar_simulado,
+    )
+
     datos = embarcacion_valida.copy()
     datos.pop("estado")
 
     respuesta = client.post(
         "/api/embarcaciones",
         json=datos,
+        headers={"X-Admin-Token": "token-prueba"},
     )
 
-    assert respuesta.status_code == 501
-    assert respuesta.get_json()["status"] == "pendiente"   
+    assert respuesta.status_code == 201
+    assert respuesta.get_json()["datos"]["estado"] == "En faena"
