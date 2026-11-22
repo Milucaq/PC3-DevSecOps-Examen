@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="PescaConecta Chorrillos: mercado pesquero digital.">
   <title>PescaConecta | Del mar a tu mesa</title>
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
   <style>
     :root {
       --navy: #0b2740;
@@ -21,24 +19,18 @@
       --line: #e6edf0;
       --cloud: #f6fafb;
     }
-
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
       color: var(--ink);
       background: white;
       font-family: 'DM Sans', sans-serif;
     }
-
     h1, h2, h3, h4, .brand {
       font-family: 'Manrope', sans-serif;
     }
-
     a { text-decoration: none; }
-
     .announcement {
       background: #083851;
       color: #d7f5f3;
@@ -46,18 +38,14 @@
       padding: 9px 12px;
       font-size: 12px;
     }
-
     .announcement strong { color: white; }
-
     .main-nav {
       background: white;
       box-shadow: 0 8px 26px rgba(14, 47, 64, .05);
       position: relative;
       z-index: 10;
     }
-
     .navbar { min-height: 81px; }
-
     .brand {
       display: flex;
       align-items: center;
@@ -67,7 +55,6 @@
       font-weight: 800;
       letter-spacing: -.9px;
     }
-
     .brand-mark {
       width: 41px;
       height: 41px;
@@ -78,9 +65,7 @@
       border-radius: 12px;
       font-size: 21px;
     }
-
     .brand span span { color: var(--teal); }
-
     .brand small {
       display: block;
       color: #78909c;
@@ -89,16 +74,13 @@
       letter-spacing: 2px;
       margin-top: -2px;
     }
-
     .nav-link {
       color: #345063 !important;
       font-weight: 700;
       font-size: 13px;
       margin: 0 8px;
     }
-
     .nav-link:hover { color: var(--teal) !important; }
-
     .button-main {
       background: var(--teal);
       color: white;
@@ -114,13 +96,11 @@
       cursor: pointer;
       transition: .2s;
     }
-
     .button-main:hover {
       background: var(--teal-dark);
       color: white;
       transform: translateY(-1px);
     }
-
     .button-outline {
       background: white;
       color: var(--navy);
@@ -135,21 +115,17 @@
       gap: 9px;
       cursor: pointer;
     }
-
     .button-outline:hover {
       color: var(--teal);
       border-color: var(--teal);
     }
-
     /* HERO */
-
     .hero {
       background: var(--navy-deep);
       position: relative;
       overflow: hidden;
       isolation: isolate;
     }
-
     .hero::before {
       content: "";
       position: absolute;
@@ -164,19 +140,16 @@
       background-size: cover;
       background-position: center;
     }
-
     .hero .container {
       padding-top: 95px;
       padding-bottom: 120px;
     }
-
     .eyebrow {
       color: #bff4e7;
       font-size: 11px;
       letter-spacing: 1.6px;
       font-weight: 800;
     }
-
     .hero h1 {
       color: white;
       font-size: clamp(38px, 5vw, 67px);
@@ -185,74 +158,60 @@
       letter-spacing: -2.5px;
       margin: 22px 0;
     }
-
     .hero h1 em {
       color: #71ded3;
       font-style: normal;
     }
-
     .hero p {
       color: #cfdee5;
       font-size: 16px;
       line-height: 1.8;
       max-width: 535px;
     }
-
     .hero .button-main {
       padding: 15px 24px;
       background: #25b5ad;
       border-color: #25b5ad;
       color: #062b35;
     }
-
     .hero .button-outline {
       background: transparent;
       border-color: #ffffff66;
       color: white;
     }
-
     /* BENEFICIOS */
-
     .feature-band {
       margin-top: -43px;
       position: relative;
       z-index: 3;
     }
-
     .feature-wrap {
       background: white;
       border-radius: 18px;
       box-shadow: 0 19px 45px #092d3c17;
       border: 1px solid #e9f0f1;
     }
-
     .feature {
       display: flex;
       gap: 14px;
       align-items: center;
       padding: 23px 26px;
     }
-
     .feature i {
       color: var(--teal);
       font-size: 25px;
     }
-
     .feature strong {
       display: block;
       font-weight: 800;
       font-size: 13px;
     }
-
     .feature span {
       color: #758894;
       font-size: 12px;
     }
-
     /* SECCIONES */
-
     .content-section { padding: 85px 0 40px; }
-
     .section-kicker {
       font-size: 11px;
       font-weight: 800;
@@ -260,7 +219,6 @@
       color: var(--teal);
       text-transform: uppercase;
     }
-
     .section-title {
       font-size: clamp(25px, 3.3vw, 39px);
       font-weight: 800;
@@ -268,14 +226,12 @@
       letter-spacing: -1.3px;
       margin: 10px 0 13px;
     }
-
     .section-copy {
       color: var(--muted);
       line-height: 1.7;
       max-width: 615px;
       font-size: 14px;
     }
-
     .demo-tag {
       font-size: 11px;
       padding: 8px 12px;
@@ -285,9 +241,7 @@
       border: 1px solid #f6e4b6;
       font-weight: 700;
     }
-
     /* EMBARCACIONES DE REFERENCIA */
-
     .arrival-card {
       background: white;
       border: 1px solid var(--line);
@@ -295,7 +249,6 @@
       padding: 23px;
       height: 100%;
     }
-
     .arrival-icon {
       height: 44px;
       width: 44px;
@@ -306,41 +259,34 @@
       place-items: center;
       font-size: 23px;
     }
-
     .arrival-card h3 {
       font-size: 17px;
       font-weight: 800;
       margin: 17px 0 5px;
     }
-
     .arrival-card p {
       font-size: 13px;
       color: var(--muted);
       margin: 0;
     }
-
     .status {
       border-radius: 30px;
       padding: 6px 10px;
       font-size: 11px;
       font-weight: 800;
     }
-
     .status.returning {
       background: #e6f4ff;
       color: #186ca4;
     }
-
     .status.fishing {
       background: #f0edff;
       color: #6950a0;
     }
-
     .status.arrived {
       background: #dbf8e7;
       color: #188353;
     }
-
     .arrival-foot {
       margin-top: 21px;
       border-top: 1px solid var(--line);
@@ -350,21 +296,17 @@
       font-size: 12px;
       color: var(--muted);
     }
-
     .arrival-foot strong {
       display: block;
       color: var(--navy);
       margin-top: 4px;
     }
-
     /* CATÁLOGO REAL */
-
     .market {
       background: var(--cloud);
       padding: 85px 0;
       margin-top: 60px;
     }
-
     .catalog-search {
       background: white;
       border: 1px solid #e7eff0;
@@ -372,13 +314,11 @@
       padding: 22px;
       margin-bottom: 28px;
     }
-
     .catalog-search .form-control {
       border-radius: 11px;
       padding: 12px 15px;
       font-size: 14px;
     }
-
     .product-card {
       background: white;
       border: 1px solid #e7eff0;
@@ -388,30 +328,25 @@
       box-shadow: 0 10px 22px #0b3a4710;
       transition: .25s;
     }
-
     .product-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 18px 35px #0b3a4722;
     }
-
     .product-photo {
       height: 215px;
       background: #d8eaeb;
       position: relative;
       overflow: hidden;
     }
-
     .product-photo img {
       height: 100%;
       width: 100%;
       object-fit: cover;
       transition: transform .35s;
     }
-
     .product-card:hover .product-photo img {
       transform: scale(1.05);
     }
-
     .pill {
       position: absolute;
       top: 14px;
@@ -424,22 +359,18 @@
       color: #0c736e;
       box-shadow: 0 3px 9px #0002;
     }
-
     .product-body { padding: 21px; }
-
     .product-body h3 {
       font-size: 17px;
       font-weight: 800;
       color: var(--navy);
       margin-bottom: 8px;
     }
-
     .product-body p {
       color: var(--muted);
       font-size: 12px;
       margin-bottom: 17px;
     }
-
     .product-bottom {
       padding-top: 14px;
       border-top: 1px solid var(--line);
@@ -448,20 +379,17 @@
       align-items: center;
       gap: 8px;
     }
-
     .price {
       color: var(--teal-dark);
       font-size: 21px;
       font-weight: 800;
       white-space: nowrap;
     }
-
     .price small {
       font-size: 11px;
       font-weight: 600;
       color: #7a8b95;
     }
-
     .action-link {
       color: var(--teal-dark);
       background: #e8f7f4;
@@ -472,16 +400,12 @@
       font-weight: 800;
       cursor: pointer;
     }
-
     .action-link:hover {
       color: white;
       background: var(--teal-dark);
     }
-
     /* PERFILES */
-
     .roles { padding: 90px 0; }
-
     .role-card {
       display: flex;
       align-items: flex-start;
@@ -496,13 +420,11 @@
       transition: .2s;
       cursor: pointer;
     }
-
     .role-card:hover {
       border-color: var(--teal);
       box-shadow: 0 13px 31px #0b565018;
       transform: translateY(-3px);
     }
-
     .role-icon {
       min-width: 45px;
       height: 45px;
@@ -513,29 +435,23 @@
       display: grid;
       place-items: center;
     }
-
     .role-card h3 {
       color: var(--navy);
       font-size: 15px;
       font-weight: 800;
     }
-
     .role-card p {
       font-size: 12px;
       color: var(--muted);
       margin: 0;
     }
-
     /* PASOS Y PIE */
-
     .steps {
       background: #0c344e;
       padding: 74px 0;
       color: white;
     }
-
     .steps .section-title { color: white; }
-
     .step-number {
       display: inline-grid;
       place-items: center;
@@ -548,36 +464,28 @@
       height: 51px;
       margin-bottom: 18px;
     }
-
     .steps h3 { font-size: 16px; font-weight: 800; }
-
     .steps p {
       color: #b6cbd5;
       font-size: 13px;
       line-height: 1.7;
     }
-
     footer {
       background: #071d30;
       color: #b3c7d0;
       padding: 36px 0;
       font-size: 12px;
     }
-
     footer .brand { color: white; }
-
     .modal-content {
       border: 0;
       border-radius: 21px;
       overflow: hidden;
     }
-
     .modal-header, .modal-footer {
       padding: 20px 26px;
     }
-
     .modal-body { padding: 26px; }
-
     @media (max-width: 991px) {
       .feature + .feature {
         border-top: 1px solid var(--line);
@@ -587,7 +495,6 @@
         padding-bottom: 90px;
       }
     }
-
     @media (max-width: 575px) {
       .hero h1 { font-size: 39px; }
       .market, .roles { padding: 60px 0; }
@@ -595,9 +502,7 @@
     }
   </style>
 </head>
-
 <body>
-
   <!-- BARRA SUPERIOR -->
   <div class="announcement">
     <i class="bi bi-geo-alt-fill me-1"></i>
@@ -605,7 +510,6 @@
     &nbsp;·&nbsp;
     Conectando la pesca artesanal con tus próximas compras
   </div>
-
   <!-- NAVEGACIÓN -->
   <nav class="navbar navbar-expand-lg main-nav">
     <div class="container">
@@ -613,7 +517,6 @@
         <span class="brand-mark"><i class="bi bi-water"></i></span>
         <span>Pesca<span>Conecta</span><small>CHORRILLOS</small></span>
       </a>
-
       <button class="navbar-toggler border-0"
               type="button"
               data-bs-toggle="collapse"
@@ -623,7 +526,6 @@
               aria-label="Abrir menú">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav mx-auto align-items-lg-center">
           <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
@@ -632,7 +534,6 @@
           <li class="nav-item"><a class="nav-link" href="#perfiles">Perfiles</a></li>
           <li class="nav-item"><a class="nav-link" href="#como-funciona">Cómo funciona</a></li>
         </ul>
-
         <a href="/pescador" class="button-main mt-3 mt-lg-0">
           <i class="bi bi-person-circle"></i>
           Portal de pescadores
@@ -640,7 +541,6 @@
       </div>
     </div>
   </nav>
-
   <!-- PORTADA -->
   <header class="hero" id="inicio">
     <div class="container">
@@ -649,24 +549,20 @@
           <div class="eyebrow">
             MERCADO PESQUERO DIGITAL · MVP ACADÉMICO
           </div>
-
           <h1>
             Lo mejor del mar,<br>
             <em>más cerca de ti.</em>
           </h1>
-
           <p>
             Consulta las próximas llegadas al Terminal Pesquero de
             Chorrillos, descubre especies disponibles y organiza
             tus compras con información actualizada.
           </p>
-
           <div class="d-flex flex-wrap gap-3 mt-4">
             <a class="button-main" href="#catalogo">
               Explorar pescado disponible
               <i class="bi bi-arrow-up-right"></i>
             </a>
-
             <a class="button-outline" href="/pescador">
               <i class="bi bi-person-plus"></i>
               Soy pescador
@@ -676,7 +572,6 @@
       </div>
     </div>
   </header>
-
   <!-- BENEFICIOS -->
   <div class="container feature-band">
     <div class="row feature-wrap g-0">
@@ -687,7 +582,6 @@
           <span>Conoce el estado de las embarcaciones.</span>
         </div>
       </div>
-
       <div class="col-lg-4 feature">
         <i class="bi bi-fish"></i>
         <div>
@@ -695,7 +589,6 @@
           <span>Especies, cantidades y precios.</span>
         </div>
       </div>
-
       <div class="col-lg-4 feature">
         <i class="bi bi-bag-check"></i>
         <div>
@@ -705,13 +598,10 @@
       </div>
     </div>
   </div>
-
   <main>
-
     <!-- PRÓXIMAS LLEGADAS: EJEMPLOS -->
     <section class="content-section" id="llegadas">
       <div class="container">
-
         <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
           <div>
             <span class="section-kicker">DESDE EL TERMINAL</span>
@@ -722,15 +612,12 @@
               corresponde a la siguiente funcionalidad.
             </p>
           </div>
-
           <span class="demo-tag">
             <i class="bi bi-info-circle"></i>
             Datos ilustrativos
           </span>
         </div>
-
         <div class="row g-3">
-
           <div class="col-md-4">
             <article class="arrival-card">
               <div class="d-flex justify-content-between align-items-start">
@@ -745,7 +632,6 @@
               </div>
             </article>
           </div>
-
           <div class="col-md-4">
             <article class="arrival-card">
               <div class="d-flex justify-content-between align-items-start">
@@ -760,7 +646,6 @@
               </div>
             </article>
           </div>
-
           <div class="col-md-4">
             <article class="arrival-card">
               <div class="d-flex justify-content-between align-items-start">
@@ -775,15 +660,12 @@
               </div>
             </article>
           </div>
-
         </div>
       </div>
     </section>
-
     <!-- CATÁLOGO ÚNICO, CONECTADO A SUPABASE -->
     <section class="market" id="catalogo">
       <div class="container">
-
         <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
           <div>
             <span class="section-kicker">CATÁLOGO PESQUERO</span>
@@ -793,13 +675,16 @@
               en la plataforma PescaConecta.
             </p>
           </div>
-
           <span class="demo-tag">
             <i class="bi bi-database-check"></i>
             Conectado a Supabase · MVP académico
           </span>
         </div>
-
+        <div class="d-flex justify-content-end mb-3">
+          <a href="/reservas" class="button-main">
+            <i class="bi bi-bag-check"></i> Ir a reservas
+          </a>
+        </div>
         <div class="catalog-search">
           <div class="row g-3 align-items-end">
             <div class="col-md-8">
@@ -813,7 +698,6 @@
                 placeholder="Buscar bonito, jurel, caballa..."
               >
             </div>
-
             <div class="col-md-4">
               <button id="actualizarCatalogo"
                       type="button"
@@ -824,28 +708,22 @@
             </div>
           </div>
         </div>
-
         <p id="estadoCatalogo"
            class="text-secondary small mb-4"
            role="status"
            aria-live="polite">
           Cargando productos disponibles...
         </p>
-
         <div id="catalogoReal" class="row g-4" aria-live="polite"></div>
-
         <p class="small text-secondary mt-4 mb-0">
           Las fotografías son ilustrativas. El catálogo contiene
           registros de demostración y no constituye una oferta comercial real.
         </p>
-
       </div>
     </section>
-
     <!-- PERFILES -->
     <section class="roles" id="perfiles">
       <div class="container">
-
         <div class="text-center mb-5">
           <span class="section-kicker">HECHO PARA TODOS</span>
           <h2 class="section-title">¿Cómo quieres ingresar?</h2>
@@ -854,9 +732,7 @@
             Pesquero de Chorrillos.
           </p>
         </div>
-
         <div class="row g-3">
-
           <div class="col-md-6 col-lg-4">
             <a href="/pescador" class="role-card">
               <span class="role-icon"><i class="bi bi-water"></i></span>
@@ -866,7 +742,6 @@
               </span>
             </a>
           </div>
-
           <div class="col-md-6 col-lg-4">
             <button class="role-card" type="button" data-profile="Público general">
               <span class="role-icon"><i class="bi bi-basket3"></i></span>
@@ -876,7 +751,6 @@
               </span>
             </button>
           </div>
-
           <div class="col-md-6 col-lg-4">
             <button class="role-card" type="button" data-profile="Restaurante">
               <span class="role-icon"><i class="bi bi-shop"></i></span>
@@ -886,7 +760,6 @@
               </span>
             </button>
           </div>
-
           <div class="col-md-6 col-lg-4">
             <button class="role-card" type="button" data-profile="Comerciante">
               <span class="role-icon"><i class="bi bi-box-seam"></i></span>
@@ -896,7 +769,6 @@
               </span>
             </button>
           </div>
-
           <div class="col-md-6 col-lg-4">
             <button class="role-card" type="button" data-profile="Administrador">
               <span class="role-icon"><i class="bi bi-sliders2"></i></span>
@@ -906,7 +778,6 @@
               </span>
             </button>
           </div>
-
           <div class="col-md-6 col-lg-4">
             <a href="#como-funciona" class="role-card">
               <span class="role-icon"><i class="bi bi-question-circle"></i></span>
@@ -916,47 +787,38 @@
               </span>
             </a>
           </div>
-
         </div>
       </div>
     </section>
-
     <!-- PROCESO -->
     <section class="steps" id="como-funciona">
       <div class="container">
-
         <div class="text-center mb-5">
           <span class="section-kicker" style="color:#76e6d9">
             SENCILLO Y DIRECTO
           </span>
           <h2 class="section-title">Así funciona PescaConecta</h2>
         </div>
-
         <div class="row g-4">
           <div class="col-md-4">
             <span class="step-number">01</span>
             <h3>El pescador anuncia su llegada</h3>
             <p>Registra su embarcación y hora estimada de desembarque.</p>
           </div>
-
           <div class="col-md-4">
             <span class="step-number">02</span>
             <h3>Se publican los productos</h3>
             <p>El catálogo muestra especies, cantidades y precios.</p>
           </div>
-
           <div class="col-md-4">
             <span class="step-number">03</span>
             <h3>Los compradores consultan</h3>
             <p>Revisan los productos antes de organizar su compra.</p>
           </div>
         </div>
-
       </div>
     </section>
-
   </main>
-
   <!-- PIE -->
   <footer>
     <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -964,12 +826,10 @@
         <span class="brand-mark"><i class="bi bi-water"></i></span>
         <span>Pesca<span>Conecta</span><small>CHORRILLOS</small></span>
       </a>
-
-      <span>MVP académico · No representa oficialmente al terminal pesquero</span>
+      <span>MVP académico · Productos y reservas de demostración · No representa oficialmente al terminal pesquero</span>
       <span>Del mar a tu mesa.</span>
     </div>
   </footer>
-
   <!-- MODAL DE PRODUCTO -->
   <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -983,26 +843,24 @@
                   data-bs-dismiss="modal"
                   aria-label="Cerrar"></button>
         </div>
-
         <div class="modal-body">
           <p id="offerModalText"></p>
           <div class="alert alert-info small mb-0">
-            Consulta informativa del MVP académico.
-            La reserva de productos se implementará en el Sprint 3.
+            Registro de demostración académica. La solicitud se almacena en Supabase
+            cuando el servidor tiene habilitado el modo de reservas local.
           </div>
         </div>
-
         <div class="modal-footer">
-          <button class="button-main"
-                  type="button"
-                  data-bs-dismiss="modal">
-            Entendido
+          <button class="button-outline" type="button" data-bs-dismiss="modal">
+            Cerrar
           </button>
+          <a id="botonReservarProducto" class="button-main" href="/reservas">
+            <i class="bi bi-bag-check"></i> Solicitar reserva
+          </a>
         </div>
       </div>
     </div>
   </div>
-
   <!-- MODAL DE PERFIL -->
   <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -1016,14 +874,12 @@
                   data-bs-dismiss="modal"
                   aria-label="Cerrar"></button>
         </div>
-
         <div class="modal-body">
           <p id="profileModalText"></p>
           <div class="alert alert-info small mb-0">
             El inicio de sesión por perfiles todavía no está habilitado.
           </div>
         </div>
-
         <div class="modal-footer">
           <button class="button-main"
                   type="button"
@@ -1034,30 +890,23 @@
       </div>
     </div>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
   <script>
     // SELECCIÓN DE PERFILES
     document.querySelectorAll('[data-profile]').forEach(button => {
       button.addEventListener('click', () => {
         const perfil = button.dataset.profile;
-
         document.getElementById('profileModalTitle').textContent =
           '¡Bienvenido! · ' + perfil;
-
         document.getElementById('profileModalText').textContent =
           'Has seleccionado el perfil: ' + perfil + '.';
-
         bootstrap.Modal.getOrCreateInstance(
           document.getElementById('profileModal')
         ).show();
       });
     });
-
     // CATÁLOGO REAL
     let productosDisponibles = [];
-
     // Imágenes de referencia para presentación.
     const imagenesEspecies = {
       bonito: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=850&q=80',
@@ -1065,66 +914,50 @@
       caballa: 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?auto=format&fit=crop&w=850&q=80',
       perico: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=850&q=80'
     };
-
     function obtenerImagen(especie) {
       const nombre = String(especie || '').toLowerCase();
-
       for (const [clave, imagen] of Object.entries(imagenesEspecies)) {
         if (nombre.includes(clave)) {
           return imagen;
         }
       }
-
       return imagenesEspecies.bonito;
     }
-
     function crearElemento(etiqueta, clase, texto) {
       const elemento = document.createElement(etiqueta);
-
       if (clase) {
         elemento.className = clase;
       }
-
       if (texto !== undefined) {
         elemento.textContent = texto;
       }
-
       return elemento;
     }
-
     function crearTarjetaProducto(producto) {
       const columna = crearElemento(
         'div',
         'col-sm-6 col-lg-4 col-xl-3'
       );
-
       const tarjeta = crearElemento('article', 'product-card');
-
       // IMAGEN
       const foto = crearElemento('div', 'product-photo');
       const imagen = document.createElement('img');
-
       imagen.src = obtenerImagen(producto.especie);
       imagen.alt = 'Imagen ilustrativa del producto';
       imagen.loading = 'lazy';
-
       const etiqueta = crearElemento(
         'span',
         'pill',
         'Producto registrado'
       );
-
       foto.append(imagen, etiqueta);
-
       // INFORMACIÓN
       const cuerpo = crearElemento('div', 'product-body');
-
       const titulo = crearElemento(
         'h3',
         '',
         String(producto.especie)
       );
-
       const detalle = crearElemento(
         'p',
         '',
@@ -1132,123 +965,95 @@
         Number(producto.cantidad_kg).toLocaleString('es-PE') +
         ' kg disponibles'
       );
-
       const inferior = crearElemento('div', 'product-bottom');
-
       const precio = crearElemento('div', 'price');
-
       precio.textContent =
         'S/ ' + Number(producto.precio_kg).toFixed(2);
-
       const unidad = crearElemento('small', '', ' / kg');
       precio.appendChild(unidad);
-
       // DETALLE
       const boton = crearElemento(
         'button',
         'action-link',
         'Ver detalle →'
       );
-
       boton.type = 'button';
-
       boton.addEventListener('click', () => {
         document.getElementById('offerModalTitle').textContent =
           String(producto.especie);
-
         document.getElementById('offerModalText').textContent =
           'Especie: ' + producto.especie +
           ' · Cantidad: ' + producto.cantidad_kg +
           ' kg · Precio: S/ ' +
           Number(producto.precio_kg).toFixed(2) + '/kg';
-
+        // Enlace al formulario de reservas con el ID real del producto.
+        document.getElementById('botonReservarProducto').href =
+          '/reservas?producto=' + encodeURIComponent(String(producto.id));
         bootstrap.Modal.getOrCreateInstance(
           document.getElementById('offerModal')
         ).show();
       });
-
       inferior.append(precio, boton);
       cuerpo.append(titulo, detalle, inferior);
       tarjeta.append(foto, cuerpo);
       columna.appendChild(tarjeta);
-
       return columna;
     }
-
     function mostrarProductos() {
       const contenedor = document.getElementById('catalogoReal');
       const estado = document.getElementById('estadoCatalogo');
-
       const filtro = document.getElementById('filtroEspecie')
         .value.trim().toLowerCase();
-
       contenedor.replaceChildren();
-
       const filtrados = productosDisponibles.filter(producto =>
         String(producto.especie)
           .toLowerCase()
           .includes(filtro)
       );
-
       if (filtrados.length === 0) {
         estado.textContent = productosDisponibles.length === 0
           ? 'Todavía no hay productos registrados.'
           : 'No se encontraron productos con ese nombre.';
         return;
       }
-
       estado.textContent =
         filtrados.length + ' producto(s) disponible(s)';
-
       filtrados.forEach(producto => {
         contenedor.appendChild(crearTarjetaProducto(producto));
       });
     }
-
     async function cargarCatalogoReal() {
       const estado = document.getElementById('estadoCatalogo');
       const boton = document.getElementById('actualizarCatalogo');
-
       estado.textContent = 'Consultando productos en Supabase...';
       boton.disabled = true;
-
       try {
         const respuesta = await fetch('/api/productos', {
           cache: 'no-store'
         });
-
         if (!respuesta.ok) {
           throw new Error('Error HTTP ' + respuesta.status);
         }
-
         const resultado = await respuesta.json();
-
         if (!Array.isArray(resultado.datos)) {
           throw new Error('Respuesta inesperada de la API');
         }
-
         productosDisponibles = resultado.datos;
         mostrarProductos();
-
       } catch (error) {
         productosDisponibles = [];
         document.getElementById('catalogoReal').replaceChildren();
-
         estado.textContent =
           'No se pudo cargar el catálogo: ' + error.message;
       } finally {
         boton.disabled = false;
       }
     }
-
     document.getElementById('filtroEspecie')
       .addEventListener('input', mostrarProductos);
-
     document.getElementById('actualizarCatalogo')
       .addEventListener('click', cargarCatalogoReal);
-
     cargarCatalogoReal();
   </script>
-
 </body>
 </html>
